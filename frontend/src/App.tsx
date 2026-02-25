@@ -1,12 +1,17 @@
-import { useChat } from './hooks/useChat';
-import { MainLayout } from './components/layout/MainLayout';
+import { useChat } from "./hooks/useChat";
+import { MainLayout } from "./components/layout/MainLayout";
 
 function App() {
-  const { messages, inputValue, setInputValue, isLoading, isTyping, sendMessage, messagesEndRef } = useChat();
-
-  const handleNavClick = (itemId) => {
-    console.log('Navigation clicked:', itemId);
-  };
+  const {
+    messages,
+    inputValue,
+    setInputValue,
+    isLoading,
+    isTyping,
+    sendMessage,
+    uploadPDF,
+    messagesEndRef,
+  } = useChat();
 
   return (
     <MainLayout
@@ -14,10 +19,10 @@ function App() {
       inputValue={inputValue}
       setInputValue={setInputValue}
       onSend={sendMessage}
+      uploadPDF={uploadPDF}  // if you updated InputDock
       isLoading={isLoading}
       isTyping={isTyping}
       messagesEndRef={messagesEndRef}
-      onNavClick={handleNavClick}
     />
   );
 }

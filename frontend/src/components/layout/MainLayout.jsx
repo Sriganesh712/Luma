@@ -8,6 +8,7 @@ export const MainLayout = ({
   inputValue,
   setInputValue,
   onSend,
+  uploadPDF,
   isLoading,
   isTyping,
   messagesEndRef,
@@ -35,6 +36,7 @@ export const MainLayout = ({
           inputValue={inputValue}
           setInputValue={setInputValue}
           onSend={onSend}
+          uploadPDF={uploadPDF} 
           isLoading={isLoading}
         />
       </div>

@@ -1,93 +1,114 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef } from "react";
 
 export const useChat = () => {
   const [messages, setMessages] = useState([]);
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+  const [pdfText, setPdfText] = useState("");
   const messagesEndRef = useRef(null);
 
-  const sendMessage = useCallback(async (text, file = null) => {
-    if (!text.trim() && !file) return;
+  /* =========================================
+     Upload PDF (Extract text only)
+     ========================================= */
+  const uploadPDF = useCallback(async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
 
-    const userMessage = {
-      id: Date.now().toString(),
-      role: 'user',
-      content: text || '',
-      fileName: file ? file.name : null,
-      fileType: file ? file.type : null,
-      timestamp: new Date(),
-    };
+    const response = await fetch("http://localhost:3000/api/upload-pdf", {
+      method: "POST",
+      body: formData,
+    });
 
-    setMessages(prev => [...prev, userMessage]);
-    setInputValue('');
-    setIsLoading(true);
-    setIsTyping(true);
+    if (!response.ok) {
+      throw new Error("PDF upload failed");
+    }
 
-    try {
-      let response;
+    const data = await response.json();
 
-      if (file) {
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("message", text);
+    // Store extracted text for future chat context
+    setPdfText(data.text || "");
+  }, []);
 
-        response = await fetch("http://localhost:3000/api/chat/upload-pdf", {
-          method: "POST",
-          body: formData,
-        });
+  /* =========================================
+     Send Chat Message (Text + Optional File)
+     ========================================= */
+  const sendMessage = useCallback(
+    async (text, file) => {
+      if (!text?.trim() && !file) return;
 
-      } else {
-        // ---------------------------
-        // NORMAL TEXT CHAT
-        // ---------------------------
-        response = await fetch("http://localhost:3000/api/chat", {
+      const userMessage = {
+        id: Date.now().toString(),
+        role: "user",
+        content: text || "",
+        file: file
+          ? {
+              name: file.name,
+              size: file.size,
+              type: file.type,
+            }
+          : null,
+        timestamp: new Date(),
+      };
+
+      // Add user message immediately (optimistic UI)
+      setMessages((prev) => [...prev, userMessage]);
+
+      setIsLoading(true);
+      setIsTyping(true);
+
+      try {
+        const response = await fetch("http://localhost:3000/api/chat", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
             message: text,
-            history: messages.map(m => ({
+            history: [
+              ...messages,
+              { role: "user", content: text || "" },
+            ].map((m) => ({
               role: m.role,
-              content: m.content
-            }))
+              content: m.content,
+            })),
+            pdfText,
           }),
         });
-      }
 
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
 
-      const data = await response.json();
+        const data = await response.json();
 
-      const aiMessage = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: data.reply || "File processed successfully.",
-        timestamp: new Date(),
-      };
-
-      setMessages(prev => [...prev, aiMessage]);
-
-    } catch (error) {
-      console.error("Chat error:", error);
-
-      setMessages(prev => [
-        ...prev,
-        {
-          id: (Date.now() + 2).toString(),
-          role: 'assistant',
-          content: "⚠️ Unable to connect to AI service.",
+        const aiMessage = {
+          id: (Date.now() + 1).toString(),
+          role: "assistant",
+          content: data.reply || "No response generated.",
           timestamp: new Date(),
-        },
-      ]);
-    } finally {
-      setIsTyping(false);
-      setIsLoading(false);
-    }
-  }, [messages]);
+        };
+
+        setMessages((prev) => [...prev, aiMessage]);
+      } catch (error) {
+        console.error("Chat error:", error);
+
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: (Date.now() + 2).toString(),
+            role: "assistant",
+            content: "⚠️ Unable to connect to AI service.",
+            timestamp: new Date(),
+          },
+        ]);
+      } finally {
+        setIsTyping(false);
+        setIsLoading(false);
+      }
+    },
+    [messages, pdfText]
+  );
 
   return {
     messages,
@@ -96,6 +117,7 @@ export const useChat = () => {
     isLoading,
     isTyping,
     sendMessage,
+    uploadPDF,
     messagesEndRef,
   };
 };
