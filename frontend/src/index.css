@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    @apply text-slate-900;
+  }
+
+  body {
+    @apply bg-slate-50 font-sans overflow-x-hidden;
+  }
+
+  * {
+    @apply transition-colors duration-200 ease-smooth;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-slate-100;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-slate-300 rounded-full hover:bg-slate-400;
+  }
+}
+
+@layer components {
+  .glass-soft {
+    @apply bg-white/40 backdrop-blur-xl border border-white/20;
+  }
+
+  .surface-elevated {
+    @apply bg-white shadow-md;
+  }
+
+  .surface-base {
+    @apply bg-slate-100;
+  }
+
+  .button-primary {
+    @apply px-4 py-2 rounded-2xl bg-accent-500 text-white font-medium text-sm transition-all duration-200 ease-smooth hover:bg-accent-600 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .button-secondary {
+    @apply px-4 py-2 rounded-2xl bg-slate-200 text-slate-900 font-medium text-sm transition-all duration-200 ease-smooth hover:bg-slate-300 active:scale-95;
+  }
+
+  .button-icon {
+    @apply p-2 rounded-2xl text-slate-600 hover:bg-slate-200 transition-colors duration-200 ease-smooth active:scale-95;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-3 rounded-2xl bg-slate-100 border border-slate-300 text-slate-900 placeholder-slate-500 text-base transition-all duration-200 ease-smooth focus:outline-none focus:bg-white focus:border-accent-300 focus:ring-2 focus:ring-accent-500/20;
+  }
+}
