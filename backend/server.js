@@ -15,16 +15,7 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 app.use(cors());
-app.use(express.json({ limit: "2mb" })); // Prevent huge body crashes
-
-/* =============================
-   CONFIGURATION
-============================= */
-
-if (!process.env.HF_TOKEN) {
-  console.error("❌ HF_TOKEN not found in .env file");
-  process.exit(1);
-}
+app.use(express.json({ limit: "2mb" })); 
 
 const client = new OpenAI({
   baseURL: "https://models.github.ai/inference",
@@ -33,6 +24,12 @@ const client = new OpenAI({
 
 const SYSTEM_PROMPT = `
 You are Sahayak, an academic AI mentor.
+Always format mathematical expressions using LaTeX:
+- Inline math must be wrapped in $...$
+- Display equations must be wrapped in $$...$$
+- Never use parentheses ( ... ) or brackets [ ... ] for math formatting.
+- Use proper LaTeX commands like \frac, \int, \mathcal, etc.
+- Format tables using proper markdown table syntax.
 
 Rules:
 - Provide structured and concise explanations.
@@ -41,18 +38,8 @@ Rules:
 - Stay factual and avoid speculation.
 - Maintain a helpful, professional tone.
 `;
-
-/* =============================
-   HELPER LIMITS
-============================= */
-
-// Keep prompt size safe for Mistral-7B
-const MAX_PDF_CHARS = 10000;
-const MAX_HISTORY_MESSAGES = 6;
-
-/* =============================
-   MULTER CONFIG
-============================= */
+const MAX_PDF_CHARS = 100000;
+const MAX_HISTORY_MESSAGES = 20;
 
 const upload = multer({
   dest: "uploads/",
@@ -66,9 +53,6 @@ const upload = multer({
   },
 });
 
-/* =============================
-   CHAT ROUTE
-============================= */
 
 app.post("/api/chat", async (req, res) => {
   try {
@@ -124,10 +108,6 @@ app.post("/api/chat", async (req, res) => {
     });
   }
 });
-
-/* =============================
-   PDF UPLOAD ROUTE
-============================= */
 
 app.post("/api/upload-pdf", upload.single("file"), async (req, res) => {
   try {
