@@ -113,6 +113,7 @@ export const useChat = () => {
   return {
     messages,
     inputValue,
+    setMessages,
     setInputValue,
     isLoading,
     isTyping,

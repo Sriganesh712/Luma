@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Menu, X } from 'lucide-react';
-import { navigationItems } from '../../data/mockMessages';
+import { Menu, X, Plus, MessageSquare, Download, Trash2 } from 'lucide-react';
+import toast from 'react-hot-toast';
+import { navigationItems } from '../../data/info_data';
 
 const iconComponents = {
   Home: () => (
@@ -30,14 +31,40 @@ const iconComponents = {
   ),
 };
 
-export const Sidebar = ({ activeItem = 'home', onItemClick }) => {
+// ADDED onDeleteChat prop
+export const Sidebar = ({ 
+  activeItem = 'home', 
+  onItemClick, 
+  messages = [], 
+  onNewChat, 
+  chatHistory = [], 
+  onSelectChat,
+  onDeleteChat 
+}) => {
   const [isOpen, setIsOpen] = useState(false);
+
+  const handleExport = () => {
+    if (!messages || messages.length === 0) {
+      toast.error("No messages to export");
+      return;
+    }
+    const chatText = messages
+      .map((m) => `${m.role.toUpperCase()}:\n${m.content}\n`)
+      .join("\n---\n");
+    const blob = new Blob([chatText], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "Sahayak_Chat_Export.txt";
+    a.click();
+    toast.success("Chat exported successfully!");
+  };
 
   return (
     <>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="md:hidden fixed top-4 left-4 z-50 p-2 rounded-2xl text-slate-600 hover:bg-slate-200"
+        className="md:hidden fixed top-4 left-4 z-50 p-2 rounded-2xl text-slate-600 hover:bg-slate-200 transition-colors"
       >
         {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
       </button>
@@ -47,9 +74,10 @@ export const Sidebar = ({ activeItem = 'home', onItemClick }) => {
           isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
         }`}
       >
+        {/* Profile / Header */}
         <div className="p-6 border-b border-slate-200">
           <div className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-accent-500 to-accent-600 flex items-center justify-center text-white font-bold text-lg">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-accent-500 to-accent-600 flex items-center justify-center text-white font-bold text-lg shadow-sm">
               S
             </div>
             <div className="flex flex-col">
@@ -59,43 +87,102 @@ export const Sidebar = ({ activeItem = 'home', onItemClick }) => {
           </div>
         </div>
 
-        <nav className="flex-1 p-4 space-y-2">
-          {navigationItems.map((item) => {
-            const IconComponent = iconComponents[item.icon];
-            const isActive = activeItem === item.id;
+        {/* Scrollable Middle Area */}
+        <div className="flex-1 overflow-y-auto custom-scrollbar flex flex-col">
+          <nav className="p-4 space-y-2">
+            {/* New Chat Button */}
+            <button
+              onClick={() => {
+                if (onNewChat) onNewChat();
+                setIsOpen(false);
+              }}
+              className="w-full mb-4 flex items-center justify-center gap-2 px-4 py-3 bg-accent-500 hover:bg-accent-600 text-white rounded-2xl text-sm font-medium transition-colors shadow-sm"
+            >
+              <Plus size={18} />
+              <span>New Chat</span>
+            </button>
 
-            return (
-              <button
-                key={item.id}
-                onClick={() => {
-                  onItemClick?.(item.id);
-                  setIsOpen(false);
-                }}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-medium transition-all duration-200 ease-smooth ${
-                  isActive
-                    ? 'bg-white text-accent-600 shadow-sm'
-                    : 'text-slate-600 hover:bg-slate-200/50'
-                }`}
-              >
-                <IconComponent />
-                <span>{item.label}</span>
-              </button>
-            );
-          })}
-        </nav>
+            {navigationItems.map((item) => {
+              const IconComponent = iconComponents[item.icon];
+              const isActive = activeItem === item.id;
 
-        <div className="p-4 border-t border-slate-200">
-          <div className="px-4 py-3 rounded-2xl bg-white/40 border border-white/20 text-center">
-            <p className="text-xs text-slate-600">
-              <span className="font-semibold">Pro Tip:</span> Use focus mode for distraction-free learning
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    onItemClick?.(item.id);
+                    setIsOpen(false);
+                  }}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-medium transition-all duration-200 ease-smooth ${
+                    isActive
+                      ? 'bg-white text-accent-600 shadow-sm'
+                      : 'text-slate-600 hover:bg-slate-200/50'
+                  }`}
+                >
+                  <IconComponent />
+                  <span>{item.label}</span>
+                </button>
+              );
+            })}
+          </nav>
+
+          {/* Chat History Section */}
+          <div className="p-4 pt-2 mt-auto border-t border-slate-200">
+            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3 px-2">
+              Recent Chats
             </p>
+            <div className="space-y-1">
+              {chatHistory.length === 0 ? (
+                <p className="text-xs text-slate-400 px-3">No recent chats yet.</p>
+              ) : (
+                chatHistory.map((chat) => (
+                  <div key={chat.id} className="group relative flex items-center w-full hover:bg-slate-200/50 rounded-xl transition-colors">
+                    {/* Select Chat Button */}
+                    <button
+                      onClick={() => {
+                        if (onSelectChat) onSelectChat(chat.id);
+                        setIsOpen(false);
+                      }}
+                      className="flex-1 flex items-center gap-3 px-3 py-2 text-slate-600 text-left overflow-hidden"
+                    >
+                      <MessageSquare size={16} className="shrink-0 opacity-70" />
+                      <span className="text-sm truncate pr-6">{chat.title}</span>
+                    </button>
+                    
+                    {/* Delete Chat Button (Shows on hover) */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevents selecting the chat when clicking delete
+                        if (onDeleteChat) onDeleteChat(chat.id);
+                      }}
+                      className="absolute right-2 p-1.5 text-slate-400 hover:text-red-500 hover:bg-white rounded-lg opacity-0 group-hover:opacity-100 transition-all"
+                      title="Delete chat"
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
+                ))
+              )}
+            </div>
           </div>
+        </div>
+
+        {/* Footer Utilities */}
+        <div className="p-4 border-t border-slate-200 space-y-1">
+          <button
+            onClick={handleExport}
+            className="w-full flex items-center gap-3 px-4 py-2.5 text-slate-600 hover:bg-slate-200/50 rounded-xl transition-colors"
+          >
+            <Download size={18} className="shrink-0" />
+            <span className="text-sm font-medium">Export Chat</span>
+          </button>
         </div>
       </aside>
 
+      {/* Mobile Overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black/20 md:hidden z-30"
+          className="fixed inset-0 bg-black/20 backdrop-blur-sm md:hidden z-30 transition-opacity"
           onClick={() => setIsOpen(false)}
         />
       )}

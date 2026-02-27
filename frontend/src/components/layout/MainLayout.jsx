@@ -13,15 +13,27 @@ export const MainLayout = ({
   isTyping,
   messagesEndRef,
   onNavClick,
+  // 1. CATCH THE NEW PROPS FROM APP.JSX HERE:
+  chatHistory,
+  onNewChat,
+  onSelectChat,
+  onDeleteChat 
 }) => {
   return (
-    <div className="h-screen flex overflow-hidden">
+    <div className="h-screen flex overflow-hidden bg-white">
       
-      {/* Fixed Sidebar */}
-      <Sidebar onItemClick={onNavClick} />
+      {/* 2. PASS THEM DOWN TO THE SIDEBAR HERE: */}
+      <Sidebar 
+        onItemClick={onNavClick} 
+        messages={messages}
+        chatHistory={chatHistory}
+        onNewChat={onNewChat}
+        onSelectChat={onSelectChat}
+        onDeleteChat={onDeleteChat} 
+      />
 
       {/* Chat Area */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col overflow-hidden relative">
         
         {/* Scrollable Message Area */}
         <MessageList
@@ -32,13 +44,15 @@ export const MainLayout = ({
         />
 
         {/* Fixed Input */}
-        <InputDock
-          inputValue={inputValue}
-          setInputValue={setInputValue}
-          onSend={onSend}
-          uploadPDF={uploadPDF} 
-          isLoading={isLoading}
-        />
+        <div className="shrink-0 w-full">
+          <InputDock
+            inputValue={inputValue}
+            setInputValue={setInputValue}
+            onSend={onSend}
+            uploadPDF={uploadPDF} 
+            isLoading={isLoading}
+          />
+        </div>
       </div>
     </div>
   );
