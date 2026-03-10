@@ -4,68 +4,305 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ─────────────────────────────────────────────────────────────
+   AI-Mentor  ·  Apple × Coursera Light Design System
+   ───────────────────────────────────────────────────────────── */
+
+:root {
+  /* Coursera blue palette */
+  --blue:         #0056D2;
+  --blue-hover:   #004AAD;
+  --blue-light:   #EBF3FF;
+  --blue-mid:     #B8D0F5;
+
+  /* Apple-inspired neutrals */
+  --ink:          #1d1d1f;
+  --ink-2:        #3d3d3f;
+  --ink-3:        #6e6e73;
+  --ink-4:        #a1a1a6;
+  --ink-5:        #d2d2d7;
+
+  /* Backgrounds */
+  --bg-page:      #f5f5f7;
+  --bg-white:     #ffffff;
+  --bg-subtle:    #fafafa;
+  --bg-section:   #f2f2f7;
+
+  /* Semantic */
+  --success:      #1d7a4f;
+  --success-bg:   #d1fae5;
+  --warning:      #92400e;
+  --warning-bg:   #fef3c7;
+  --danger:       #c0392b;
+  --danger-bg:    #fee2e2;
+
+  /* Shadows */
+  --shadow-xs:  0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+  --shadow-sm:  0 2px 8px rgba(0,0,0,.08), 0 0 1px rgba(0,0,0,.04);
+  --shadow-md:  0 4px 20px rgba(0,0,0,.10), 0 1px 4px rgba(0,0,0,.05);
+  --shadow-lg:  0 8px 40px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.06);
+  --shadow-xl:  0 20px 60px rgba(0,0,0,.15), 0 4px 16px rgba(0,0,0,.08);
+
+  /* Gradients */
+  --grad-primary: linear-gradient(135deg, #0056D2 0%, #0099CC 100%);
+  --grad-emerald: linear-gradient(135deg, #057642 0%, #06b6d4 100%);
+  --grad-amber:   linear-gradient(135deg, #B7700A 0%, #ef4444 100%);
+  --grad-rose:    linear-gradient(135deg, #C0392B 0%, #9b59b6 100%);
+  --grad-violet:  linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
-    @apply text-slate-900;
+    color-scheme: light;
   }
 
   body {
-    @apply bg-slate-50 font-sans overflow-x-hidden;
+    background-color: var(--bg-page);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', 'Segoe UI', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
   }
 
-  * {
-    @apply transition-colors duration-200 ease-smooth;
+  h1, h2, h3, h4, h5, h6 {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', sans-serif;
+    letter-spacing: -0.02em;
+    color: var(--ink);
   }
 
-  ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: #f1f1f1; }
+  ::-webkit-scrollbar-thumb { background: #c7c7cc; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #aeaeb2; }
 
-  ::-webkit-scrollbar-track {
-    @apply bg-slate-100;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    @apply bg-slate-300 rounded-full hover:bg-slate-400;
+  *:focus-visible {
+    outline: 2px solid var(--blue);
+    outline-offset: 2px;
   }
 }
 
 @layer components {
-  .glass-soft {
-    @apply bg-white/40 backdrop-blur-xl border border-white/20;
+
+  /* ── Primary Button (Coursera style) ── */
+  .btn-gradient {
+    background-color: var(--blue);
+    color: white;
+    font-weight: 600;
+    border-radius: 6px;
+    padding: 0.625rem 1.5rem;
+    font-size: 0.875rem;
+    letter-spacing: 0.01em;
+    transition: background-color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+  }
+  .btn-gradient:hover:not(:disabled) {
+    background-color: var(--blue-hover);
+    box-shadow: 0 4px 16px rgba(0,86,210,0.35);
+    transform: translateY(-1px);
+  }
+  .btn-gradient:active:not(:disabled) { transform: scale(0.98); }
+  .btn-gradient:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+
+  /* ── Secondary Button ── */
+  .btn-secondary {
+    background-color: var(--bg-white);
+    color: var(--blue);
+    font-weight: 600;
+    border: 1.5px solid var(--blue);
+    border-radius: 6px;
+    padding: 0.5625rem 1.5rem;
+    font-size: 0.875rem;
+    transition: all 0.15s ease;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+  }
+  .btn-secondary:hover:not(:disabled) {
+    background-color: var(--blue-light);
+    border-color: var(--blue-hover);
+  }
+  .btn-secondary:disabled { opacity: 0.55; cursor: not-allowed; }
+
+  /* ── Ghost Button ── */
+  .btn-ghost {
+    background-color: transparent;
+    color: var(--ink-3);
+    font-weight: 500;
+    border: 1.5px solid var(--ink-5);
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    transition: all 0.15s ease;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+  }
+  .btn-ghost:hover:not(:disabled) {
+    background-color: var(--bg-section);
+    border-color: var(--ink-4);
+    color: var(--ink);
   }
 
-  .surface-elevated {
-    @apply bg-white shadow-md;
+  /* ── Form Input ── */
+  .form-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    border: 1.5px solid var(--ink-5);
+    background: var(--bg-white);
+    color: var(--ink);
+    font-size: 0.9375rem;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    font-family: inherit;
+  }
+  .form-input::placeholder { color: var(--ink-4); }
+  .form-input:focus {
+    outline: none;
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(0,86,210,0.12);
   }
 
-  .surface-base {
-    @apply bg-slate-100;
+  /* ── Card (Apple-style white card) ── */
+  .card-glass {
+    background: var(--bg-white);
+    border: 1px solid var(--ink-5);
+    border-radius: 16px;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+  }
+  .card-glass:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
   }
 
-  .button-primary {
-    @apply px-4 py-2 rounded-2xl bg-accent-500 text-white font-medium text-sm transition-all duration-200 ease-smooth hover:bg-accent-600 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+  /* ── Stat Card ── */
+  .stat-card {
+    background: var(--bg-white);
+    border: 1px solid var(--ink-5);
+    border-radius: 16px;
+    padding: 1.25rem 1.5rem;
+    box-shadow: var(--shadow-xs);
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .stat-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
   }
 
-  .button-secondary {
-    @apply px-4 py-2 rounded-2xl bg-slate-200 text-slate-900 font-medium text-sm transition-all duration-200 ease-smooth hover:bg-slate-300 active:scale-95;
+  /* ── Course / Class Card ── */
+  .course-card {
+    background: var(--bg-white);
+    border: 1px solid var(--ink-5);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: box-shadow 0.2s, transform 0.2s;
+    cursor: pointer;
+    display: block;
+  }
+  .course-card:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-4px);
   }
 
-  .button-icon {
-    @apply p-2 rounded-2xl text-slate-600 hover:bg-slate-200 transition-colors duration-200 ease-smooth active:scale-95;
+  /* ── Sidebar Nav Item ── */
+  .nav-item-v2 {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5625rem 0.875rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--ink-3);
+    transition: all 0.15s ease;
+    text-decoration: none;
+  }
+  .nav-item-v2:hover {
+    color: var(--blue);
+    background: var(--blue-light);
+  }
+  .nav-item-v2.active {
+    color: var(--blue);
+    background: var(--blue-light);
+    font-weight: 600;
   }
 
-  .input-field {
-    @apply w-full px-4 py-3 rounded-2xl bg-slate-100 border border-slate-300 text-slate-900 placeholder-slate-500 text-base transition-all duration-200 ease-smooth focus:outline-none focus:bg-white focus:border-accent-300 focus:ring-2 focus:ring-accent-500/20;
-  }
-  .katex {
-    font-size: 1.05em;
-  }
+  /* ── Badge / Status Pills ── */
+  .badge { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.1875rem 0.625rem; border-radius: 100px; font-size: 0.75rem; font-weight: 600; }
+  .badge-green  { background: #d1fae5; color: #065f46; }
+  .badge-blue   { background: var(--blue-light); color: var(--blue); }
+  .badge-amber  { background: #fef3c7; color: #92400e; }
+  .badge-red    { background: #fee2e2; color: #991b1b; }
+  .badge-gray   { background: #f3f4f6; color: #374151; }
+  .badge-indigo { background: #eef2ff; color: #4338ca; }
 
-  .katex-display {
-    margin: 1.5rem 0;
+  /* ── Skeleton ── */
+  .skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton 1.5s ease-in-out infinite;
+    border-radius: 8px;
   }
-
 }
+
+/* ── Text gradient utility ── */
+.text-gradient {
+  background: var(--grad-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ── Hero background ── */
+.hero-bg {
+  background-image: radial-gradient(circle at 1px 1px, rgba(0,86,210,0.08) 1px, transparent 0);
+  background-size: 32px 32px;
+}
+
+/* ── Frosted glass surface ── */
+.glass-surface {
+  background: rgba(255,255,255,0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+
+/* ── Page section background ── */
+.bg-mesh {
+  background-color: var(--bg-page);
+  background-image:
+    radial-gradient(at 20% 30%, rgba(0,86,210,0.06) 0px, transparent 50%),
+    radial-gradient(at 80% 10%, rgba(0,153,204,0.05) 0px, transparent 50%),
+    radial-gradient(at 50% 80%, rgba(99,102,241,0.04) 0px, transparent 50%);
+}
+
+/* ── Apple-style section divider ── */
+.divider {
+  height: 1px;
+  background: var(--ink-5);
+  margin: 0;
+}
+
+@layer utilities {
+  .animate-stagger-1 { animation-delay: 50ms; }
+  .animate-stagger-2 { animation-delay: 100ms; }
+  .animate-stagger-3 { animation-delay: 150ms; }
+  .animate-stagger-4 { animation-delay: 200ms; }
+  .animate-stagger-5 { animation-delay: 250ms; }
+}
+
+@keyframes skeleton {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.katex { font-size: 1.05em; }
+.katex-display { margin: 1.5rem 0; }
