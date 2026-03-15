@@ -24,14 +24,23 @@ const allowedOrigins = process.env.FRONTEND_URL
 
 app.use(
   cors({
-    origin: (origin, callback) => {
-      // Allow server-to-server (no origin) or whitelisted origins
-      if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
-      callback(new Error(`CORS: origin ${origin} not allowed`));
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      console.log("Blocked by CORS:", origin);
+      return callback(new Error("Not allowed by CORS"));
     },
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
+app.options("*", cors());
 app.use(express.json({ limit: "2mb" }));
 app.use(limiter);
 
