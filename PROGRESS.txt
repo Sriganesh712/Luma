@@ -1,11 +1,11 @@
 ================================================================================
-  AI-MENTOR / SAHAYAK — LMS DEVELOPMENT PROGRESS RECORD
+  LUMA — LMS DEVELOPMENT PROGRESS RECORD
   Last Updated: 2026-03-10 (Phase 4 complete)
 ================================================================================
 
 PROJECT OVERVIEW
 ----------------
-AI-Mentor is a full-featured, AI-powered Learning Management System (LMS) for
+Luma is a full-featured, AI-powered Learning Management System (LMS) for
 educational institutions. It supports three roles — Admin, Teacher, and Student
 — and is powered by GPT-4o via the GitHub Models API.
 

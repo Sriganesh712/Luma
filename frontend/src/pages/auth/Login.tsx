@@ -91,7 +91,7 @@ export default function Login() {
 
             {/* Stats row */}
             <div className="flex gap-6">
-              {stats.map(({ icon: Icon, value, label }) => (
+              {stats.map(({ value, label }) => (
                 <div key={label} className="text-center">
                   <div className="text-white font-bold text-2xl leading-none">{value}</div>
                   <div className="text-blue-200 text-xs mt-1">{label}</div>

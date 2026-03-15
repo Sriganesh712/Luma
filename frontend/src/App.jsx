@@ -88,7 +88,7 @@ function EmptyState({ onPromptClick }) {
         <Sparkles className="w-8 h-8 text-white" />
       </div>
       <h2 className="text-2xl font-bold mb-2" style={{ color: 'var(--ink)', letterSpacing: '-0.02em' }}>
-        AI Mentor
+        Luma
       </h2>
       <p className="text-sm max-w-sm mb-8 leading-relaxed" style={{ color: 'var(--ink-3)' }}>
         Ask me anything about your studies — concepts, assignments, research, or just to understand better.
@@ -340,7 +340,7 @@ export default function App() {
                   onChange={e => handleFileUpload(e.target.files?.[0])} />
                 <input
                   type="text" value={inputValue} onChange={e => setInputValue(e.target.value)}
-                  placeholder={chatMode === "support" ? "Talk to your wellbeing mentor..." : "Ask your AI mentor anything..."}
+                  placeholder={chatMode === "support" ? "Talk to Luma for support..." : "Ask Luma anything..."}
                   className="flex-1 px-4 py-2.5 rounded-xl border text-sm focus:outline-none transition"
                   style={{
                     background: 'white', borderColor: 'var(--ink-5)',

@@ -1,0 +1,828 @@
+================================================================================
+  LUMA — Intelligent Learning Management System
+  Project Details & Technical Reference
+================================================================================
+
+  "Luma" — an AI-powered LMS that connects
+  students, teachers, and administrators through intelligent mentoring,
+  AI-generated assessments, and real-time academic support.
+
+================================================================================
+  TABLE OF CONTENTS
+================================================================================
+
+  1. Project Overview
+  2. Architecture
+  3. Tech Stack
+  4. Directory Structure
+  5. User Roles & Permissions
+  6. Frontend — Pages & Features
+  7. Backend — API Endpoints
+  8. Database Schema
+  9. AI Features
+  10. Authentication & Security
+  11. Storage
+  12. Design System
+  13. Environment Variables
+  14. Running the Project
+  15. Deployment
+
+================================================================================
+  1. PROJECT OVERVIEW
+================================================================================
+
+  Luma is a full-stack Learning Management System (LMS) built for
+  educational institutions. It supports three user roles — Admin, Teacher, and
+  Student — each with a dedicated portal. The platform's centrepiece is an
+  AI mentor chat powered by GPT-4o (via GitHub Models) that gives students
+  personalised academic help and emotional/wellbeing support.
+
+  Core capabilities:
+  ─ Institution management (multi-tenant via institution codes)
+  ─ Class creation, student enrolment, teacher assignment
+  ─ Study material uploads (PDF, DOCX, PPTX, video, links)
+  ─ AI-generated MCQ / written assignments from any topic or uploaded material
+  ─ Student assignment submission with automatic MCQ grading
+  ─ AI-powered evaluation of written answers with per-question feedback
+  ─ Persistent AI mentor chat (Study Mode + Wellbeing/Support Mode)
+  ─ PDF upload to chat for document-aware Q&A
+  ─ Grade tracking with per-class performance summaries
+  ─ Real-time streaming AI responses (Server-Sent Events)
+  ─ Role-based access control enforced at both API and database level
+
+================================================================================
+  2. ARCHITECTURE
+================================================================================
+
+  ┌────────────────────────────────────────────────────────────┐
+  │                        Browser (React)                     │
+  │   Vite + React 18 + TypeScript + Tailwind CSS + Framer    │
+  └──────────────────────────┬─────────────────────────────────┘
+                             │  REST + SSE
+  ┌──────────────────────────▼─────────────────────────────────┐
+  │               Express.js Backend  (Node.js ESM)            │
+  │   Auth · Admin · Materials · Assignments · AI · Chat       │
+  └─────────────┬────────────────────────────┬─────────────────┘
+                │  Supabase JS SDK           │  OpenAI SDK
+  ┌─────────────▼───────────────┐  ┌─────────▼──────────────────┐
+  │  Supabase (PostgreSQL)      │  │  GitHub Models / GPT-4o    │
+  │  Auth · RLS · Storage       │  │  (openai/gpt-4o endpoint)  │
+  └─────────────────────────────┘  └────────────────────────────┘
+
+  Data flow:
+  • All reads/writes to user data go through Supabase (direct from frontend
+    for reads, via backend for writes that require privileged access or AI).
+  • The backend acts as a secure middleware for: registration, AI chat, PDF
+    processing, assignment generation, and grading.
+  • Row Level Security (RLS) on Supabase ensures users can only access data
+    belonging to their own institution.
+
+================================================================================
+  3. TECH STACK
+================================================================================
+
+  FRONTEND
+  ─────────────────────────────────────────────────────────
+  Framework         React 18  (Vite build tool)
+  Language          TypeScript (with some JSX for Chat component)
+  Styling           Tailwind CSS 3  +  Custom CSS (Apple × Coursera design)
+  Routing           React Router DOM v7
+  State             React Context (Auth, Theme)  +  Zustand (lightweight store)
+  Animations        Framer Motion
+  UI Icons          Lucide React
+  Markdown          react-markdown + remark-gfm + remark-math
+  Math Rendering    KaTeX  (rehype-katex)
+  Notifications     react-hot-toast
+  HTTP              Native fetch() API
+
+  BACKEND
+  ─────────────────────────────────────────────────────────
+  Runtime           Node.js (ESM modules, "type": "module")
+  Framework         Express.js v5
+  Language          JavaScript (ES Modules)
+  Validation        Zod
+  Auth Middleware   Supabase JWT verification
+  Rate Limiting     express-rate-limit  (100 req / 15 min)
+  File Uploads      Multer
+  PDF Parsing       pdf-parse + pdfjs-dist
+  AI SDK            openai (pointing to GitHub Models inference endpoint)
+  Database Client   @supabase/supabase-js
+
+  DATABASE & INFRASTRUCTURE
+  ─────────────────────────────────────────────────────────
+  Database          PostgreSQL  via  Supabase
+  Auth              Supabase Auth (email/password + JWT)
+  Storage           Supabase Storage (study-materials bucket, 50MB limit)
+  AI Model          openai/gpt-4o  via  GitHub Models  (https://models.github.ai)
+  Containerisation  Docker + Docker Compose
+  Deployment        Vercel (frontend)  +  any Node host (backend)
+
+================================================================================
+  4. DIRECTORY STRUCTURE
+================================================================================
+
+  ai-mentor/
+  ├── frontend/
+  │   ├── src/
+  │   │   ├── App.jsx                  AI Chat UI (main chat component)
+  │   │   ├── main.tsx                 React app entry point
+  │   │   ├── index.css                Global styles (Apple × Coursera design system)
+  │   │   ├── contexts/
+  │   │   │   ├── AuthContext.tsx      Auth state, signIn/signUp/signOut
+  │   │   │   └── ThemeContext.tsx     Light-mode enforcer
+  │   │   ├── components/
+  │   │   │   ├── layout/
+  │   │   │   │   └── DashboardLayout.tsx   Sidebar + header shell
+  │   │   │   ├── Breadcrumb.tsx
+  │   │   │   ├── ProtectedRoute.tsx
+  │   │   │   └── ThemeToggle.tsx
+  │   │   ├── hooks/
+  │   │   │   └── useChat.js           Chat state + SSE streaming logic
+  │   │   ├── lib/
+  │   │   │   └── supabase.ts          Supabase client
+  │   │   └── pages/
+  │   │       ├── auth/
+  │   │       │   ├── Login.tsx
+  │   │       │   └── Register.tsx
+  │   │       ├── student/
+  │   │       │   ├── Dashboard.tsx
+  │   │       │   ├── ClassDetail.tsx
+  │   │       │   ├── Grades.tsx
+  │   │       │   └── AssignmentTake.tsx
+  │   │       ├── teacher/
+  │   │       │   ├── Dashboard.tsx
+  │   │       │   ├── ClassDetail.tsx
+  │   │       │   ├── Assignments.tsx
+  │   │       │   ├── AssignmentForm.tsx
+  │   │       │   ├── AssignmentDetail.tsx
+  │   │       │   ├── Materials.tsx
+  │   │       │   └── MaterialUpload.tsx
+  │   │       └── admin/
+  │   │           ├── Dashboard.tsx
+  │   │           ├── Classes.tsx
+  │   │           ├── ClassDetail.tsx
+  │   │           ├── ClassForm.tsx
+  │   │           └── Users.tsx
+  │   ├── tailwind.config.js
+  │   ├── vite.config.ts
+  │   └── vercel.json
+  │
+  ├── backend/
+  │   ├── server.js                    Entry point (listens on PORT 3000)
+  │   └── src/
+  │       ├── app.js                   Express app (CORS, rate limit, routes)
+  │       ├── config/
+  │       │   └── constants.js         System prompts, limits
+  │       ├── routes/
+  │       │   ├── apiRoutes.js         /api/chat, /api/chat/stream, /api/upload-pdf
+  │       │   ├── authRoutes.js        /api/auth/register
+  │       │   ├── adminRoutes.js       /api/admin/*
+  │       │   ├── materialRoutes.js    /api/materials/*
+  │       │   ├── assignmentRoutes.js  /api/assignments/*
+  │       │   └── aiRoutes.js          /api/ai/generate-assignment, /api/ai/evaluate-submission
+  │       ├── controllers/
+  │       │   ├── chatController.js
+  │       │   ├── pdfController.js
+  │       │   ├── authController.js
+  │       │   ├── adminController.js
+  │       │   ├── materialController.js
+  │       │   ├── assignmentController.js
+  │       │   └── aiController.js
+  │       ├── services/
+  │       │   ├── openaiService.js     GPT-4o calls (chat, generate, evaluate)
+  │       │   └── pdfService.js        PDF text extraction
+  │       └── middlewares/
+  │           ├── authMiddleware.js    requireAuth, requireRole
+  │           ├── upload.js            Multer config
+  │           └── validate.js          Zod schemas
+  │
+  ├── supabase/
+  │   └── schema.sql                   Full DB schema + RLS policies + indexes
+  │
+  └── docker-compose.yml               Backend + Frontend containers
+
+================================================================================
+  5. USER ROLES & PERMISSIONS
+================================================================================
+
+  ADMIN
+  ─────────────────────────────────────────────────────────
+  • Creates the institution (gets a unique 6-character institution code)
+  • Manages all classes: create, update, delete, assign teachers
+  • Enrolls / unenrolls students in classes
+  • Views all users (teachers, students) within the institution
+  • Institution code is used by teachers/students to join the platform
+  • Full read access to all institution data
+
+  TEACHER
+  ─────────────────────────────────────────────────────────
+  • Manages their assigned classes (view class, student roster)
+  • Uploads study materials (PDF, PPTX, DOCX, video, external link)
+  • Creates assignments (MCQ, written, or mixed)
+  • Uses AI to auto-generate assignment questions from topic + materials
+  • Publishes / closes assignments
+  • Reviews student submissions
+  • Grades written answers manually or triggers AI evaluation
+  • Views submission statistics
+
+  STUDENT
+  ─────────────────────────────────────────────────────────
+  • Views enrolled classes and their materials
+  • Takes published assignments (MCQ auto-graded, written saved for grading)
+  • Views own grades and per-class performance averages
+  • Uses Luma chat (Study Mode + Wellbeing/Support Mode)
+  • Uploads PDF documents to chat for document-aware Q&A
+  • Chat history persisted across sessions (up to 30 sessions, 20 msg history)
+
+================================================================================
+  6. FRONTEND — PAGES & FEATURES
+================================================================================
+
+  AUTH PAGES
+  ─────────────────────────────────────────────────────────
+  /login
+    Split-screen layout. Left: Unsplash hero with Coursera-blue overlay +
+    feature highlights + stats. Right: Email/password form with Coursera-style
+    blue CTA button.
+
+  /register
+    Two-step wizard:
+      Step 1 — Name, email, password, confirm password
+      Step 2 — Role selection (Admin / Teacher / Student)
+               Admin: enter institution name → code auto-generated
+               Teacher/Student: enter 6-character institution code
+
+  STUDENT PORTAL  (/student/*)
+  ─────────────────────────────────────────────────────────
+  /student
+    Dashboard: hero banner with learning photo + stats (enrolled classes,
+    pending tasks, submitted count), My Classes grid (Coursera-style cards
+    with gradient top bands), Assignments list with status badges.
+
+  /student/classes
+    List of all enrolled classes with subject tags.
+
+  /student/classes/:id
+    Class detail with tabs: Materials (PDF/video/link list with open buttons),
+    Assignments (due dates, points, submission status). "Chat with AI" button
+    launches context-aware mentor for this class.
+
+  /student/assignments
+    Full assignments list with search/filter.
+
+  /student/assignments/:id
+    Assignment taking interface: reads questions, accepts MCQ selections and
+    written text answers, submits to backend. MCQ auto-graded on submit.
+    Score shown immediately.
+
+  /student/materials
+    All materials across all enrolled classes.
+
+  /student/grades
+    Per-class grade summaries with animated score bars (green/amber/red),
+    overall average, submission count.
+
+  /student/chat
+    Full-screen Luma chat interface (see Section 9 for AI details).
+    Sidebar with chat history (up to 30 sessions). Study/Support mode toggle.
+    PDF attachment support. Real-time token streaming.
+
+  TEACHER PORTAL  (/teacher/*)
+  ─────────────────────────────────────────────────────────
+  /teacher
+    Dashboard: hero banner, My Classes grid (with student count), Recent
+    Assignments list with status badges (draft / published / closed).
+
+  /teacher/classes
+    All assigned classes.
+
+  /teacher/classes/:id
+    Class detail: student roster, materials list, assignments list.
+    Enroll/unenroll students.
+
+  /teacher/materials
+    All materials across classes with upload button.
+
+  /teacher/materials/upload
+    Material upload form: title, type, class, file upload or external URL.
+    Files go to Supabase Storage (study-materials bucket).
+
+  /teacher/assignments
+    All assignments with search, filter by status, create new.
+
+  /teacher/assignments/new
+    Assignment creation wizard:
+      — Title, class, type (MCQ / Written / Mixed), points, deadline
+      — AI question generation: enter topic + optional material context,
+        choose count and difficulty → GPT-4o generates questions
+      — Manual question editing / adding
+      — Save as draft or publish immediately
+
+  /teacher/assignments/:id
+    Assignment detail: question list, submission count, deadline.
+    Actions: publish, close, delete.
+    View all submissions and per-student scores.
+
+  /teacher/assignments/:id/submissions/:submissionId
+    Individual submission review. See per-question student answers,
+    AI-generated feedback (for written), manual score override.
+    Trigger bulk AI evaluation of all written answers.
+
+  ADMIN PORTAL  (/admin/*)
+  ─────────────────────────────────────────────────────────
+  /admin
+    Dashboard: institution stats (teachers, students, classes), institution
+    join code display, classes table.
+
+  /admin/classes
+    Full classes list. Create new class.
+
+  /admin/classes/new  |  /admin/classes/:id/edit
+    Class form: name, subject, assign teacher.
+
+  /admin/classes/:id
+    Class detail: enrolled students, teacher, enrol/unenrol controls.
+
+  /admin/users  |  /admin/teachers  |  /admin/students
+    User management tables for the institution.
+
+================================================================================
+  7. BACKEND — API ENDPOINTS
+================================================================================
+
+  Base URL: http://localhost:3000  (or VITE_API_URL in .env)
+
+  HEALTH
+  ─────────────────────────────────────────────────────────
+  GET  /                           "Luma Backend Running 🚀"
+  GET  /api/health                 { status: "ok", ts: "..." }
+
+  AUTH   (no auth required)
+  ─────────────────────────────────────────────────────────
+  POST /api/auth/register          Register user + create/join institution
+    Body: { email, password, name, role,
+            institutionName? (admin) | institutionCode? (teacher/student) }
+    – Creates Supabase auth user
+    – Creates/looks up institution record
+    – Inserts into public.users with institution_id
+
+  CHAT  (no auth required — anonymous AI access)
+  ─────────────────────────────────────────────────────────
+  POST /api/chat                   Non-streaming chat (legacy)
+    Body: { message, history[], pdfText?, mode? }
+
+  POST /api/chat/stream            SSE streaming chat  ← primary endpoint
+    Body: { message, history[], pdfText?, classId?, mode? }
+    Response: text/event-stream  →  data: { content: "..." }
+                                    data: { done: true }
+    – Streams GPT-4o tokens in real time
+    – Supports Study mode (academic) and Support mode (wellbeing)
+    – If classId provided, fetches class materials as context
+
+  POST /api/upload-pdf             Extract text from PDF
+    Content-Type: multipart/form-data  field: "file"
+    Response: { text: "..." }  (up to 100,000 chars)
+
+  ADMIN  (requireAuth + requireRole("admin"))
+  ─────────────────────────────────────────────────────────
+  GET    /api/admin/stats                    Institution stats
+  GET    /api/admin/users                    All users in institution
+  GET    /api/admin/classes                  All classes
+  POST   /api/admin/classes                  Create class
+  PATCH  /api/admin/classes/:id              Update class
+  DELETE /api/admin/classes/:id              Delete class
+  POST   /api/admin/classes/:id/enroll       Enrol students  (body: { studentIds[] })
+  DELETE /api/admin/classes/:id/enroll/:sid  Unenrol student
+
+  MATERIALS  (requireAuth)
+  ─────────────────────────────────────────────────────────
+  GET    /api/materials            List (filtered by class/user)
+  POST   /api/materials            Create material record  [teacher/admin]
+  DELETE /api/materials/:id        Delete material  [teacher/admin]
+
+  ASSIGNMENTS  (requireAuth)
+  ─────────────────────────────────────────────────────────
+  GET    /api/assignments                    List assignments
+  GET    /api/assignments/:id                Get assignment + questions
+  POST   /api/assignments                    Create assignment  [teacher/admin]
+  PATCH  /api/assignments/:id/publish        Publish assignment  [teacher/admin]
+  PATCH  /api/assignments/:id/status         Update status  [teacher/admin]
+  DELETE /api/assignments/:id                Delete assignment  [teacher/admin]
+  GET    /api/assignments/:id/submissions    List submissions  [teacher/admin]
+  POST   /api/assignments/:id/submit         Submit answers  [student]
+    – Auto-grades MCQ answers immediately
+    – Stores written answers for manual/AI grading
+  PATCH  /api/assignments/submissions/:id/grade  Grade submission  [teacher/admin]
+
+  AI  (requireAuth)
+  ─────────────────────────────────────────────────────────
+  POST /api/ai/generate-assignment      Generate questions with GPT-4o  [teacher/admin]
+    Body: { topic, materialText?, type, numQuestions, difficulty }
+    Returns: { questions: [...] }
+
+  POST /api/ai/evaluate-submission/:id  AI-grade written answers  [teacher/admin]
+    – Sends all written answers to GPT-4o for scoring + feedback
+    – Updates answers.score and answers.ai_feedback in DB
+
+================================================================================
+  8. DATABASE SCHEMA
+================================================================================
+
+  All tables live in the "public" schema in Supabase (PostgreSQL).
+  Row Level Security (RLS) is ENABLED on all tables.
+
+  TABLE: institutions
+  ─────────────────────────────────────────────────────────
+  id           uuid  PK  (auto-generated)
+  name         text  NOT NULL
+  code         text  UNIQUE  (6-char institution join code, e.g. "A1B2C3")
+  logo_url     text
+  created_at   timestamptz
+
+  TABLE: users
+  ─────────────────────────────────────────────────────────
+  id             uuid  PK  →  auth.users(id)
+  institution_id uuid  →  institutions(id)
+  name           text  NOT NULL
+  email          text  NOT NULL
+  role           text  CHECK IN ('admin', 'teacher', 'student')
+  avatar_url     text
+  created_at     timestamptz
+
+  TABLE: classes
+  ─────────────────────────────────────────────────────────
+  id             uuid  PK
+  institution_id uuid  →  institutions(id)  NOT NULL
+  name           text  NOT NULL
+  subject        text
+  teacher_id     uuid  →  users(id)  (nullable: class can exist without teacher)
+  created_at     timestamptz
+
+  TABLE: enrollments  (junction: students ↔ classes)
+  ─────────────────────────────────────────────────────────
+  id          uuid  PK
+  class_id    uuid  →  classes(id)  NOT NULL
+  student_id  uuid  →  users(id)  NOT NULL
+  enrolled_at timestamptz
+  UNIQUE (class_id, student_id)
+
+  TABLE: study_materials
+  ─────────────────────────────────────────────────────────
+  id               uuid  PK
+  class_id         uuid  →  classes(id)  NOT NULL
+  teacher_id       uuid  →  users(id)
+  title            text  NOT NULL
+  type             text  CHECK IN ('pdf','pptx','docx','video','link','other')
+  file_url         text  (Supabase Storage URL)
+  external_url     text
+  file_size_bytes  bigint
+  description      text
+  created_at       timestamptz
+
+  TABLE: assignments
+  ─────────────────────────────────────────────────────────
+  id           uuid  PK
+  class_id     uuid  →  classes(id)  NOT NULL
+  teacher_id   uuid  →  users(id)
+  title        text  NOT NULL
+  description  text
+  type         text  CHECK IN ('mcq', 'written', 'mixed')
+  total_points integer  DEFAULT 100
+  deadline     timestamptz
+  status       text  DEFAULT 'draft'  CHECK IN ('draft','published','closed')
+  created_at   timestamptz
+
+  TABLE: assignment_targets  (class-wide or individual targeting)
+  ─────────────────────────────────────────────────────────
+  id            uuid  PK
+  assignment_id uuid  →  assignments(id)  NOT NULL
+  target_type   text  CHECK IN ('class', 'student')
+  target_id     uuid  (class_id or student_id)
+
+  TABLE: questions
+  ─────────────────────────────────────────────────────────
+  id             uuid  PK
+  assignment_id  uuid  →  assignments(id)  NOT NULL
+  question_text  text  NOT NULL
+  type           text  CHECK IN ('mcq', 'written')
+  options        jsonb  (MCQ: [{ label: "A", text: "..." }, ...])
+  correct_answer text   (MCQ: "A"/"B"/"C"/"D")
+  points         integer  DEFAULT 10
+  order_index    integer  DEFAULT 0
+
+  TABLE: submissions
+  ─────────────────────────────────────────────────────────
+  id            uuid  PK
+  assignment_id uuid  →  assignments(id)  NOT NULL
+  student_id    uuid  →  users(id)  NOT NULL
+  submitted_at  timestamptz
+  total_score   integer  (null until graded)
+  status        text  DEFAULT 'submitted'  CHECK IN ('submitted','graded')
+  UNIQUE (assignment_id, student_id)
+
+  TABLE: answers
+  ─────────────────────────────────────────────────────────
+  id               uuid  PK
+  submission_id    uuid  →  submissions(id)  NOT NULL
+  question_id      uuid  →  questions(id)  NOT NULL
+  student_answer   text
+  score            integer
+  ai_feedback      text  (GPT-4o generated feedback per question)
+  teacher_feedback text  (manual override)
+
+  TABLE: chat_sessions
+  ─────────────────────────────────────────────────────────
+  id         uuid  PK
+  student_id uuid  →  users(id)  NOT NULL
+  class_id   uuid  →  classes(id)  (optional class context)
+  title      text  (first 50 chars of first message)
+  created_at timestamptz
+  updated_at timestamptz
+
+  TABLE: chat_messages
+  ─────────────────────────────────────────────────────────
+  id         uuid  PK
+  session_id uuid  →  chat_sessions(id)  NOT NULL
+  role       text  CHECK IN ('user', 'assistant')
+  content    text  NOT NULL
+  created_at timestamptz
+
+  RLS POLICY SUMMARY
+  ─────────────────────────────────────────────────────────
+  • Users only see data from their own institution
+  • Students only see their own submissions, answers, chat sessions
+  • Teachers only manage classes/materials/assignments they own
+  • Admins have full access within their institution
+  • Helper functions: my_institution_id() and my_role() for policy evaluation
+
+  INDEXES (performance)
+  ─────────────────────────────────────────────────────────
+  users(institution_id), classes(institution_id, teacher_id),
+  enrollments(class_id, student_id), study_materials(class_id),
+  assignments(class_id, teacher_id), submissions(assignment_id, student_id),
+  chat_sessions(student_id), chat_messages(session_id)
+
+================================================================================
+  9. AI FEATURES
+================================================================================
+
+  AI MODEL
+  ─────────────────────────────────────────────────────────
+  Model:     openai/gpt-4o
+  Provider:  GitHub Models inference endpoint
+             (https://models.github.ai/inference)
+  Auth:      GITHUB_TOKEN environment variable
+  SDK:       openai npm package (configured with custom baseURL)
+
+  FEATURE 1: AI MENTOR CHAT (streaming)
+  ─────────────────────────────────────────────────────────
+  Two modes selectable in the chat UI:
+
+  Study Mode (default)
+    System prompt: "Sahayak" — academic mentor persona
+    Capabilities:
+      – Explains concepts in structured, concise form
+      – Renders LaTeX math inline ($...$) and display ($$...$$)
+      – Renders markdown: tables, code blocks, bullet points
+      – Aware of uploaded PDF content (appended to system prompt)
+      – Aware of class study materials when launched from a class page
+      – Conversation history: last 20 messages sent for context
+    Streaming: SSE (Server-Sent Events) — tokens streamed token-by-token
+
+  Support/Wellbeing Mode
+    System prompt: empathetic counsellor persona
+    Capabilities:
+      – Active listening, emotional validation
+      – Academic stress / anxiety management guidance
+      – Encourages healthy habits
+      – Redirects to professional help when appropriate
+      – Safety flag: prepends [CONCERN_FLAG] if self-harm/crisis detected
+    Academic questions are gently redirected back to Study Mode
+
+  FEATURE 2: AI ASSIGNMENT GENERATION
+  ─────────────────────────────────────────────────────────
+  Teachers provide:
+    – Topic name
+    – Optional study material context (pasted text, up to 6,000 chars)
+    – Assignment type: MCQ | Written | Mixed
+    – Number of questions (e.g. 5, 10)
+    – Difficulty: Easy | Medium | Hard
+
+  GPT-4o returns structured JSON:
+    { questions: [
+        { question_text, type, options (MCQ only), correct_answer, points }
+      ]
+    }
+  Questions are pre-populated into the assignment form for editing.
+
+  FEATURE 3: AI WRITTEN ANSWER EVALUATION
+  ─────────────────────────────────────────────────────────
+  Teachers trigger AI evaluation on a submitted assignment.
+  For each written answer, GPT-4o receives:
+    – The question text
+    – The model/expected answer
+    – The student's actual answer
+    – Maximum points available
+
+  GPT-4o returns:
+    { results: [{ answerId, score: 0–maxPoints, feedback: "..." }] }
+
+  Results are saved to answers.score and answers.ai_feedback.
+  Teachers can override scores manually.
+
+  FEATURE 4: PDF DOCUMENT CHAT
+  ─────────────────────────────────────────────────────────
+  Students can upload a PDF in the chat interface.
+  The backend extracts text using pdf-parse / pdfjs-dist (up to 100,000 chars).
+  Extracted text is appended to the AI system prompt for the session.
+  The AI can then answer questions specifically about the document.
+
+================================================================================
+  10. AUTHENTICATION & SECURITY
+================================================================================
+
+  • Authentication: Supabase Auth (email + password)
+  • Sessions: JWT tokens managed by Supabase SDK, stored in localStorage
+  • Password minimum: 6 characters (enforced on frontend)
+  • Backend auth middleware: verifies JWT from Authorization header using
+    Supabase service role to authenticate requests
+  • Role-based access: requireRole() middleware checks user's role
+    before allowing access to protected routes
+  • Rate limiting: 100 requests per 15 minutes per IP (express-rate-limit)
+  • CORS: configurable FRONTEND_URL env variable (whitelist)
+  • Request body limit: 2MB (express.json limit)
+  • Multi-tenancy isolation: All DB queries include institution_id filtering
+    via RLS — users physically cannot read another institution's data
+  • Registration flow: backend creates Supabase auth user first, then
+    inserts into public.users with institution lookup/creation
+
+================================================================================
+  11. STORAGE
+================================================================================
+
+  Provider:    Supabase Storage
+  Bucket:      study-materials  (public read)
+  Size limit:  50 MB per file
+  Allowed types:
+    application/pdf
+    application/vnd.ms-powerpoint
+    application/vnd.openxmlformats-officedocument.presentationml.presentation
+    application/msword
+    application/vnd.openxmlformats-officedocument.wordprocessingml.document
+    video/mp4
+    video/webm
+    application/octet-stream
+
+  Storage RLS Policies:
+    – Any authenticated user can upload to study-materials
+    – Anyone (public) can read study-materials (for open access to resources)
+    – Only the uploader (matched by folder name = user ID) can delete
+
+================================================================================
+  12. DESIGN SYSTEM
+================================================================================
+
+  Theme:     Apple × Coursera Light  (light-only, no dark mode)
+
+  COLOUR PALETTE
+  ─────────────────────────────────────────────────────────
+  --blue:         #0056D2   (Coursera primary blue — CTAs, links, active states)
+  --blue-hover:   #004AAD   (hover state)
+  --blue-light:   #EBF3FF   (tinted backgrounds, badge fills)
+  --blue-mid:     #B8D0F5   (borders on hover)
+  --ink:          #1d1d1f   (Apple primary text — headings, body)
+  --ink-2:        #3d3d3f   (secondary text)
+  --ink-3:        #6e6e73   (muted text, placeholders)
+  --ink-4:        #a1a1a6   (very muted text, labels)
+  --ink-5:        #d2d2d7   (borders, dividers — Apple separator grey)
+  --bg-page:      #f5f5f7   (Apple page background)
+  --bg-white:     #ffffff   (card background)
+  --bg-section:   #f2f2f7   (inner section background)
+
+  TYPOGRAPHY
+  ─────────────────────────────────────────────────────────
+  Font stack:  -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, "Segoe UI"
+  Letter spacing: -0.02em to -0.03em on headings (Apple tight tracking)
+  Antialiasing:   -webkit-font-smoothing: antialiased
+
+  COMPONENT CLASSES (defined in index.css)
+  ─────────────────────────────────────────────────────────
+  .btn-gradient   Primary CTA (Coursera blue, 6px radius)
+  .btn-secondary  Outlined blue button
+  .btn-ghost      Neutral ghost button
+  .form-input     Text/email/password input (blue focus ring)
+  .card-glass     White card with Apple-style shadow and hover lift
+  .stat-card      Dashboard stat card
+  .course-card    Class card with gradient top band (Coursera style)
+  .nav-item-v2    Sidebar navigation item (blue active highlight)
+  .badge-*        Status pills: green, blue, amber, red, gray, indigo
+  .skeleton       Loading placeholder (shimmer animation)
+  .glass-surface  Frosted glass header/navbar (80% white + blur)
+  .hero-bg        Dot-grid background overlay (for hero sections)
+
+  BACKGROUND IMAGES (Unsplash)
+  ─────────────────────────────────────────────────────────
+  Login hero:          Students collaborating (warm, blue overlay)
+  Register hero:       Library / books (violet-blue overlay)
+  Student dashboard:   Lecture hall / classroom (Coursera blue overlay)
+  Teacher dashboard:   Classroom teaching (emerald overlay)
+  Admin dashboard:     Modern office (violet overlay)
+
+  GRADIENTS (course card top bands)
+  ─────────────────────────────────────────────────────────
+  Blue→Cyan, Violet→Purple, Emerald→Teal, Amber→Orange, Rose→Pink, Indigo→Blue
+
+================================================================================
+  13. ENVIRONMENT VARIABLES
+================================================================================
+
+  FRONTEND  (frontend/.env)
+  ─────────────────────────────────────────────────────────
+  VITE_SUPABASE_URL        Your Supabase project URL
+  VITE_SUPABASE_ANON_KEY   Supabase anon/public key
+  VITE_API_URL             Backend URL (default: http://localhost:3000)
+
+  BACKEND  (backend/.env)
+  ─────────────────────────────────────────────────────────
+  PORT                     Server port (default: 3000)
+  SUPABASE_URL             Your Supabase project URL
+  SUPABASE_SERVICE_KEY     Supabase service role key (for admin operations)
+  GITHUB_TOKEN             GitHub Personal Access Token (for GitHub Models AI)
+  FRONTEND_URL             Comma-separated list of allowed CORS origins
+                           e.g. "http://localhost:5173,https://your-app.vercel.app"
+  NODE_ENV                 development | production
+
+================================================================================
+  14. RUNNING THE PROJECT
+================================================================================
+
+  PREREQUISITES
+  ─────────────────────────────────────────────────────────
+  • Node.js 20+
+  • A Supabase project (free tier works)
+  • A GitHub Personal Access Token with access to GitHub Models
+
+  SETUP
+  ─────────────────────────────────────────────────────────
+  1. Clone the repository
+     git clone <repo-url>
+     cd ai-mentor
+
+  2. Set up the database
+     Open Supabase SQL Editor → paste contents of supabase/schema.sql → Run
+
+  3. Configure environment variables
+     cp backend/.env.example backend/.env    (fill in your values)
+     cp frontend/.env.example frontend/.env  (fill in your values)
+
+  RUN LOCALLY (without Docker)
+  ─────────────────────────────────────────────────────────
+  # Terminal 1 — Backend
+  cd backend
+  npm install
+  npm run dev          # starts on http://localhost:3000 with hot-reload
+
+  # Terminal 2 — Frontend
+  cd frontend
+  npm install
+  npm run dev          # starts on http://localhost:5173
+
+  RUN WITH DOCKER COMPOSE
+  ─────────────────────────────────────────────────────────
+  docker-compose up --build
+  # Backend:  http://localhost:3000
+  # Frontend: http://localhost:5173
+
+  BUILD FOR PRODUCTION
+  ─────────────────────────────────────────────────────────
+  cd frontend
+  npm run build        # outputs to frontend/dist/
+  npm run preview      # local preview of production build
+
+================================================================================
+  15. DEPLOYMENT
+================================================================================
+
+  FRONTEND — Vercel (configured via frontend/vercel.json)
+  ─────────────────────────────────────────────────────────
+  • Push frontend/ to GitHub
+  • Import project in Vercel dashboard
+  • Set environment variables: VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY,
+    VITE_API_URL (pointing to your deployed backend)
+  • vercel.json rewrites all routes to index.html for SPA routing
+
+  BACKEND — Any Node.js host (Railway, Render, Fly.io, etc.)
+  ─────────────────────────────────────────────────────────
+  • Deploy backend/ directory
+  • Set all backend environment variables on the platform
+  • Ensure FRONTEND_URL includes your Vercel deployment URL
+  • The Dockerfile in backend/ can be used for container deployments
+  • Health check endpoint: GET /api/health
+
+================================================================================
+  END OF PROJECT DETAILS
+================================================================================
+  Generated: 2026-03-10
+  Version:   1.0
+  App Name:  Luma
+================================================================================

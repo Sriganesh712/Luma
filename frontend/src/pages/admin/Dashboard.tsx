@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
 import {
-  BookOpen, Users, GraduationCap, School,
+  Users, GraduationCap, School,
   ChevronRight, Plus, BarChart2, Settings,
 } from 'lucide-react';
 import DashboardLayout from '../../components/layout/DashboardLayout';
@@ -24,7 +24,6 @@ interface ClassItem {
 
 export default function AdminDashboard() {
   const { profile } = useAuth();
-  const navigate = useNavigate();
   const [stats, setStats] = useState<Stats>({ teachers: 0, students: 0, classes: 0 });
   const [classes, setClasses] = useState<ClassItem[]>([]);
   const [institutionCode, setInstitutionCode] = useState('');

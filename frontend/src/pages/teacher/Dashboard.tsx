@@ -4,7 +4,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
 import {
   BookOpen, FileText, ClipboardList, Users,
-  Plus, ChevronRight, Clock, MessageSquare, Sparkles,
+  Plus, ChevronRight, Clock, MessageSquare,
 } from 'lucide-react';
 import DashboardLayout, { COURSE_GRADIENTS } from '../../components/layout/DashboardLayout';
 

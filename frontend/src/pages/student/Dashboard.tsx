@@ -4,7 +4,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
 import {
   BookOpen, ClipboardList, MessageSquare, BarChart2,
-  Clock, ChevronRight, FileText, Sparkles, TrendingUp, CheckCircle2,
+  Clock, ChevronRight, FileText, Sparkles, CheckCircle2,
 } from 'lucide-react';
 import DashboardLayout, { COURSE_GRADIENTS } from '../../components/layout/DashboardLayout';
 
@@ -49,7 +49,7 @@ export default function StudentDashboard() {
     { icon: FileText,      label: 'Materials',   to: '/student/materials' },
     { icon: ClipboardList, label: 'Assignments', to: '/student/assignments' },
     { icon: BarChart2,     label: 'My Grades',   to: '/student/grades' },
-    { icon: MessageSquare, label: 'AI Mentor',   to: '/student/chat' },
+    { icon: MessageSquare, label: 'Luma Chat',   to: '/student/chat' },
   ];
 
   const pending   = assignments.filter(a => !a.submitted).length;
@@ -61,7 +61,7 @@ export default function StudentDashboard() {
       pageSubtitle={`Good ${getTimeGreeting()}, ${profile?.name?.split(' ')[0]} 👋`}
       headerActions={
         <Link to="/student/chat" className="btn-gradient flex items-center gap-2 text-sm">
-          <Sparkles className="w-4 h-4" /> AI Mentor
+          <Sparkles className="w-4 h-4" /> Luma Chat
         </Link>
       }
     >

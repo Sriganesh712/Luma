@@ -43,7 +43,7 @@ app.use("/api/assignments", assignmentRoutes);
 app.use("/api/ai", aiRoutes);
 
 app.get("/", (req, res) => {
-  res.send("AI Mentor Backend Running 🚀");
+  res.send("Luma Backend Running 🚀");
 });
 
 app.get("/api/health", (_req, res) => {
