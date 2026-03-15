@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef } from "react";
 
-const API_BASE = "http://localhost:3000";
+const API_BASE = "https://luma-npm4.onrender.com";
 
 export const useChat = ({ mode = "study", classId = null } = {}) => {
   const [messages, setMessages] = useState([]);
