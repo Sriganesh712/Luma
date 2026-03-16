@@ -119,7 +119,7 @@ export const useChat = ({ mode = "study", classId = null } = {}) => {
         setMessages((prev) =>
           prev.map((m) =>
             m.id === aiPlaceholderId
-              ? { ...m, content: "⚠️ Unable to connect to AI service. Please try again." }
+              ? { ...m, content: "Unable to connect to AI service. Please try again." }
               : m
           )
         );

@@ -52,7 +52,7 @@ export default function DashboardLayout({
   };
 
   return (
-    <div className="min-h-screen flex" style={{ backgroundColor: 'var(--bg-page)' }}>
+    <div className="min-h-screen flex bg-zinc-50">
       {/* Mobile overlay */}
       <AnimatePresence>
         {sidebarOpen && (
@@ -70,31 +70,28 @@ export default function DashboardLayout({
       {/* ── Sidebar ── */}
       <aside
         className={`fixed inset-y-0 left-0 z-40 w-64 flex flex-col
-          bg-white border-r
+          bg-white border-r border-zinc-200 shadow-md
           transform transition-transform duration-300 lg:translate-x-0
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
-        style={{ borderColor: 'var(--ink-5)', boxShadow: 'var(--shadow-md)' }}
       >
         {/* Logo */}
-        <div className="flex items-center gap-3 px-5 py-5" style={{ borderBottom: '1px solid var(--ink-5)' }}>
+        <div className="flex items-center gap-3 px-5 py-5 border-b border-zinc-200">
           <div
-            className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
-            style={{ background: 'var(--grad-primary)' }}
+            className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 bg-gradient-to-br from-violet-600 to-indigo-600"
           >
             <BookOpen className="w-5 h-5 text-white" />
           </div>
           <div className="flex-1 min-w-0">
-            <div className="font-bold text-sm tracking-tight" style={{ color: 'var(--ink)' }}>AI-Mentor</div>
-            <div className="text-xs font-medium capitalize mt-0.5" style={{ color: 'var(--ink-3)' }}>
-              <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${roleColors[role] ?? 'bg-gray-100 text-gray-600'}`}>
+            <div className="font-bold text-sm tracking-tight text-zinc-950">AI-Mentor</div>
+            <div className="text-xs font-medium capitalize mt-0.5">
+              <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${roleColors[role] ?? 'bg-zinc-100 text-zinc-600'}`}>
                 {role}
               </span>
             </div>
           </div>
           <button
             onClick={() => setSidebarOpen(false)}
-            className="lg:hidden p-1.5 rounded-lg hover:bg-gray-100 transition"
-            style={{ color: 'var(--ink-3)' }}
+            className="lg:hidden p-1.5 rounded-lg hover:bg-zinc-100 transition text-zinc-600"
           >
             <X className="w-4 h-4" />
           </button>
@@ -120,26 +117,23 @@ export default function DashboardLayout({
         </nav>
 
         {/* User section */}
-        <div className="px-3 py-4 space-y-1" style={{ borderTop: '1px solid var(--ink-5)' }}>
+        <div className="px-3 py-4 space-y-1 border-t border-zinc-200">
           <div
-            className="flex items-center gap-3 px-3 py-2.5 rounded-xl"
-            style={{ background: 'var(--bg-section)' }}
+            className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-zinc-100"
           >
             <div
-              className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0"
-              style={{ background: 'var(--grad-primary)' }}
+              className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0 bg-gradient-to-br from-violet-600 to-indigo-600"
             >
               {initials}
             </div>
             <div className="flex-1 min-w-0">
-              <div className="text-sm font-semibold truncate" style={{ color: 'var(--ink)' }}>{profile?.name}</div>
-              <div className="text-xs truncate" style={{ color: 'var(--ink-4)' }}>{profile?.email}</div>
+              <div className="text-sm font-semibold truncate text-zinc-950">{profile?.name}</div>
+              <div className="text-xs truncate text-zinc-500">{profile?.email}</div>
             </div>
           </div>
           <button
             onClick={handleSignOut}
-            className="flex items-center gap-3 w-full px-3 py-2 rounded-lg transition text-sm font-medium hover:bg-red-50 hover:text-red-600"
-            style={{ color: 'var(--ink-3)' }}
+            className="flex items-center gap-3 w-full px-3 py-2 rounded-lg transition text-sm font-medium text-zinc-600 hover:bg-red-50 hover:text-red-600"
           >
             <LogOut className="w-4 h-4" />
             Sign Out
@@ -155,17 +149,16 @@ export default function DashboardLayout({
         >
           <button
             onClick={() => setSidebarOpen(true)}
-            className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition"
-            style={{ color: 'var(--ink-3)' }}
+            className="lg:hidden p-2 rounded-lg hover:bg-zinc-100 transition text-zinc-600"
           >
             <Menu className="w-5 h-5" />
           </button>
           <div>
-            <h1 className="font-bold text-base leading-tight" style={{ color: 'var(--ink)', letterSpacing: '-0.01em' }}>
+            <h1 className="font-bold text-base leading-tight text-zinc-950">
               {pageTitle}
             </h1>
             {pageSubtitle && (
-              <p className="text-xs mt-0.5" style={{ color: 'var(--ink-4)' }}>{pageSubtitle}</p>
+              <p className="text-xs mt-0.5 text-zinc-500">{pageSubtitle}</p>
             )}
           </div>
           <div className="ml-auto flex items-center gap-2">
@@ -181,3 +174,4 @@ export default function DashboardLayout({
     </div>
   );
 }
+
