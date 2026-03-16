@@ -108,24 +108,24 @@ export default function Login() {
 
           {/* Mobile logo */}
           <div className="flex items-center gap-3 mb-8 lg:hidden">
-            <div className="w-10 h-10 rounded-2xl flex items-center justify-center" style={{ background: 'var(--grad-primary)' }}>
+            <div className="w-10 h-10 rounded-2xl flex items-center justify-center bg-gradient-to-r from-blue-500 to-blue-600">
               <BookOpen className="w-5 h-5 text-white" />
             </div>
-            <span className="font-bold text-xl" style={{ color: 'var(--ink)' }}>AI-Mentor</span>
+            <span className="font-bold text-xl text-zinc-950">AI-Mentor</span>
           </div>
 
           <div className="mb-8">
-            <h1 className="font-bold text-3xl mb-2" style={{ color: 'var(--ink)', letterSpacing: '-0.03em' }}>
+            <h1 className="font-bold text-3xl mb-2 text-zinc-950" style={{ letterSpacing: '-0.03em' }}>
               Welcome back
             </h1>
-            <p className="text-base" style={{ color: 'var(--ink-3)' }}>
+            <p className="text-base text-zinc-600">
               Sign in to continue your learning journey
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-1.5">
-              <label className="block text-sm font-semibold" style={{ color: 'var(--ink-2)' }}>
+              <label className="block text-sm font-semibold text-zinc-900">
                 Email address
               </label>
               <input
@@ -137,7 +137,7 @@ export default function Login() {
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-sm font-semibold" style={{ color: 'var(--ink-2)' }}>
+              <label className="block text-sm font-semibold text-zinc-900">
                 Password
               </label>
               <input
@@ -158,10 +158,10 @@ export default function Login() {
 
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full h-px" style={{ background: 'var(--ink-5)' }} />
+              <div className="w-full h-px bg-zinc-300" />
             </div>
             <div className="relative flex justify-center">
-              <span className="px-4 text-xs bg-white" style={{ color: 'var(--ink-4)' }}>New to AI-Mentor?</span>
+              <span className="px-4 text-xs bg-white text-zinc-500">New to AI-Mentor?</span>
             </div>
           </div>
 

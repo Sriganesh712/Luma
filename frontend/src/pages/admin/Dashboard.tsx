@@ -131,49 +131,49 @@ export default function AdminDashboard() {
 
       {/* Institution code */}
       <div className="card-glass p-5 mb-6">
-        <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: 'var(--ink-4)' }}>Institution Code</p>
+        <p className="text-xs font-bold uppercase tracking-wider mb-2 text-zinc-500">Institution Code</p>
         <div className="flex items-center gap-3">
-          <code className="font-mono font-bold text-2xl tracking-widest" style={{ color: 'var(--blue)' }}>{institutionCode || '—'}</code>
-          <p className="text-xs ml-auto" style={{ color: 'var(--ink-4)' }}>Share with teachers &amp; students to join</p>
+          <code className="font-mono font-bold text-2xl tracking-widest text-violet-600">{institutionCode || '—'}</code>
+          <p className="text-xs ml-auto text-zinc-500">Share with teachers &amp; students to join</p>
         </div>
       </div>
 
       {/* Classes table */}
       <div className="card-glass overflow-hidden">
-        <div className="flex items-center justify-between px-6 py-4" style={{ borderBottom: '1px solid var(--ink-5)' }}>
-          <h2 className="font-bold text-base" style={{ color: 'var(--ink)' }}>Classes</h2>
-          <Link to="/admin/classes" className="text-sm font-semibold hover:underline transition" style={{ color: 'var(--blue)' }}>
+        <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-300">
+          <h2 className="font-bold text-base text-zinc-950">Classes</h2>
+          <Link to="/admin/classes" className="text-sm font-semibold hover:underline transition text-violet-600">
             View all →
           </Link>
         </div>
         {loading ? (
-          <div className="py-12 text-center text-sm" style={{ color: 'var(--ink-4)' }}>Loading...</div>
+          <div className="py-12 text-center text-sm text-zinc-500">Loading...</div>
         ) : classes.length === 0 ? (
           <div className="py-12 text-center">
-            <School className="w-10 h-10 mx-auto mb-3" style={{ color: 'var(--ink-5)' }} />
-            <p className="text-sm" style={{ color: 'var(--ink-3)' }}>No classes yet.</p>
-            <Link to="/admin/classes/new" className="text-sm font-semibold mt-1 block hover:underline" style={{ color: 'var(--blue)' }}>
+            <School className="w-10 h-10 mx-auto mb-3 text-zinc-400" />
+            <p className="text-sm text-zinc-600">No classes yet.</p>
+            <Link to="/admin/classes/new" className="text-sm font-semibold mt-1 block hover:underline text-violet-600">
               Create your first class →
             </Link>
           </div>
         ) : (
-          <div className="divide-y" style={{ borderColor: 'var(--ink-5)' }}>
+          <div className="divide-y border-zinc-300">
             {classes.map(cls => (
               <Link key={cls.id} to={`/admin/classes/${cls.id}`}
                 className="flex items-center justify-between px-6 py-4 hover:bg-blue-50/50 transition group">
                 <div>
-                  <div className="font-semibold text-sm" style={{ color: 'var(--ink)' }}>{cls.name}</div>
-                  <div className="text-xs mt-0.5" style={{ color: 'var(--ink-4)' }}>
+                  <div className="font-semibold text-sm text-zinc-950">{cls.name}</div>
+                  <div className="text-xs mt-0.5 text-zinc-500">
                     {cls.subject && `${cls.subject} · `}
                     {cls.teacher ? cls.teacher.name : <span className="text-amber-500">No teacher assigned</span>}
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
-                  <div className="text-sm flex items-center gap-1" style={{ color: 'var(--ink-4)' }}>
+                  <div className="text-sm flex items-center gap-1 text-zinc-500">
                     <GraduationCap className="w-4 h-4" />
                     {cls.studentCount}
                   </div>
-                  <ChevronRight className="w-4 h-4 transition" style={{ color: 'var(--ink-5)' }} />
+                  <ChevronRight className="w-4 h-4 transition text-zinc-400" />
                 </div>
               </Link>
             ))}
@@ -183,3 +183,5 @@ export default function AdminDashboard() {
     </DashboardLayout>
   );
 }
+
+

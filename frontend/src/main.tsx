@@ -10,6 +10,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 // Eagerly loaded (always needed on first paint)
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
+import Landing from './pages/Landing';
 import DashboardRedirect from './pages/DashboardRedirect';
 
 // Lazy-loaded role chunks
@@ -38,7 +39,7 @@ const ChatPage          = lazy(() => import('./App'));
 import './index.css';
 
 const PageLoader = () => (
-  <div className="min-h-screen bg-white dark:bg-slate-950 flex items-center justify-center">
+  <div className="min-h-screen bg-white flex items-center justify-center">
     <div className="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
   </div>
 );
@@ -64,6 +65,7 @@ function AppRoutes() {
       >
         <Routes location={location}>
           {/* Public routes */}
+          <Route path="/" element={<Landing />} />
           <Route path="/login"    element={<Login />} />
           <Route path="/register" element={<Register />} />
 

@@ -8,7 +8,7 @@ export default function DashboardRedirect() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-white dark:bg-slate-950 flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <Loader2 className="w-8 h-8 text-indigo-500 animate-spin" />
       </div>
     );
@@ -19,3 +19,4 @@ export default function DashboardRedirect() {
   const routes: Record<string, string> = { admin: '/admin', teacher: '/teacher', student: '/student' };
   return <Navigate to={routes[profile.role]} replace />;
 }
+

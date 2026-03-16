@@ -75,13 +75,13 @@ export default function TeacherMaterials() {
   }, {});
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 p-6">
+    <div className="min-h-screen bg-slate-50 p-6">
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center gap-3 mb-2">
-          <button onClick={() => navigate('/teacher')} className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition">
+          <button onClick={() => navigate('/teacher')} className="text-slate-500 hover:text-slate-900 transition">
             <ArrowLeft className="w-5 h-5" />
           </button>
-          <h1 className="text-slate-900 dark:text-white text-xl font-bold flex-1">All Materials</h1>
+          <h1 className="text-slate-900 text-xl font-bold flex-1">All Materials</h1>
           <Link
             to="/teacher/materials/upload"
             className="btn-gradient flex items-center gap-2 text-sm"
@@ -96,8 +96,8 @@ export default function TeacherMaterials() {
         {filtered.length > 0 && (
           <div className="card-glass p-4 mb-6 flex items-center justify-between">
             <div>
-              <p className="text-slate-900 dark:text-white font-semibold text-sm">Share learning materials</p>
-              <p className="text-slate-500 dark:text-slate-400 text-xs mt-0.5">Upload PDFs, slides, videos, and links for your students.</p>
+              <p className="text-slate-900 font-semibold text-sm">Share learning materials</p>
+              <p className="text-slate-500 text-xs mt-0.5">Upload PDFs, slides, videos, and links for your students.</p>
             </div>
             <Link to="/teacher/materials/upload" className="btn-gradient flex items-center gap-2 text-sm shrink-0">
               <Plus className="w-4 h-4" /> Upload
@@ -107,20 +107,20 @@ export default function TeacherMaterials() {
 
         {/* Search */}
         <div className="relative mb-6">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-slate-500" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
           <input
             value={search} onChange={e => setSearch(e.target.value)}
             placeholder="Search materials or class..."
-            className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 text-sm focus:outline-none focus:border-indigo-500 transition"
+            className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:border-indigo-500 transition"
           />
         </div>
 
         {loading ? (
-          <div className="py-20 text-center text-slate-400 dark:text-slate-500">Loading...</div>
+          <div className="py-20 text-center text-slate-400">Loading...</div>
         ) : filtered.length === 0 ? (
           <div className="py-20 text-center">
-            <FileText className="w-10 h-10 text-slate-300 dark:text-slate-600 mx-auto mb-3" />
-            <p className="text-slate-500 dark:text-slate-400 text-sm">
+            <FileText className="w-10 h-10 text-slate-300 mx-auto mb-3" />
+            <p className="text-slate-500 text-sm">
               {search ? 'No materials match your search.' : 'No materials uploaded yet.'}
             </p>
             <Link to="/teacher/materials/upload" className="text-indigo-400 hover:text-indigo-300 text-sm mt-2 block transition">
@@ -131,22 +131,22 @@ export default function TeacherMaterials() {
           <div className="space-y-6">
             {Object.entries(grouped).map(([key, { className, items }]) => (
               <div key={key} className="card-glass overflow-hidden">
-                <div className="px-6 py-3 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                  <h2 className="text-slate-900 dark:text-white font-semibold text-sm">{className}</h2>
-                  <span className="text-slate-400 dark:text-slate-500 text-xs">{items.length} file{items.length !== 1 ? 's' : ''}</span>
+                <div className="px-6 py-3 border-b border-slate-100 flex items-center justify-between">
+                  <h2 className="text-slate-900 font-semibold text-sm">{className}</h2>
+                  <span className="text-slate-400 text-xs">{items.length} file{items.length !== 1 ? 's' : ''}</span>
                 </div>
-                <div className="divide-y divide-slate-100 dark:divide-slate-800">
+                <div className="divide-y divide-slate-100">
                   {items.map(m => {
                     const Icon = TYPE_ICONS[m.type] ?? FileIcon;
                     const url = m.file_url ?? m.external_url;
                     return (
-                      <div key={m.id} className="flex items-center gap-4 px-6 py-4 hover:bg-slate-50 dark:hover:bg-slate-800/40 transition group">
-                        <div className="w-9 h-9 bg-slate-100 dark:bg-slate-800 group-hover:bg-slate-200 dark:group-hover:bg-slate-700 rounded-lg flex items-center justify-center shrink-0 transition">
+                      <div key={m.id} className="flex items-center gap-4 px-6 py-4 hover:bg-slate-50 transition group">
+                        <div className="w-9 h-9 bg-slate-100 group-hover:bg-slate-200 rounded-lg flex items-center justify-center shrink-0 transition">
                           <Icon className="w-4 h-4 text-indigo-400" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <div className="text-slate-900 dark:text-white text-sm font-medium truncate">{m.title}</div>
-                          <div className="text-slate-400 dark:text-slate-500 text-xs mt-0.5 uppercase">{m.type} · {new Date(m.created_at).toLocaleDateString()}</div>
+                          <div className="text-slate-900 text-sm font-medium truncate">{m.title}</div>
+                          <div className="text-slate-400 text-xs mt-0.5 uppercase">{m.type} · {new Date(m.created_at).toLocaleDateString()}</div>
                         </div>
                         <div className="flex items-center gap-2 shrink-0">
                           {url && (
@@ -175,3 +175,4 @@ export default function TeacherMaterials() {
     </div>
   );
 }
+

@@ -77,29 +77,29 @@ export default function AssignmentTake() {
   }
 
   if (loading) return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center text-slate-500 dark:text-slate-400">
+    <div className="min-h-screen bg-slate-50 flex items-center justify-center text-slate-500">
       <Loader2 className="w-6 h-6 animate-spin" />
     </div>
   );
   if (!assignment) return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center text-red-400">
+    <div className="min-h-screen bg-slate-50 flex items-center justify-center text-red-400">
       Assignment not found.
     </div>
   );
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center p-6">
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
         <div className="text-center max-w-sm">
           <div className="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
             <CheckCircle className="w-8 h-8 text-green-400" />
           </div>
-          <h1 className="text-slate-900 dark:text-white text-2xl font-bold mb-2">Submitted!</h1>
-          <p className="text-slate-500 dark:text-slate-400 mb-2">{assignment.title}</p>
+          <h1 className="text-slate-900 text-2xl font-bold mb-2">Submitted!</h1>
+          <p className="text-slate-500 mb-2">{assignment.title}</p>
           {score !== null && (
             <div className="text-4xl font-bold text-indigo-400 mt-4 mb-1">{score}</div>
           )}
-          <div className="text-slate-400 dark:text-slate-500 text-sm mb-6">out of {assignment.total_points} points</div>
+          <div className="text-slate-400 text-sm mb-6">out of {assignment.total_points} points</div>
           <Link to="/student" className="btn-gradient px-6 py-2.5 font-medium rounded-xl transition inline-block">
             Back to Dashboard
           </Link>
@@ -111,36 +111,36 @@ export default function AssignmentTake() {
   const answeredCount = questions.filter(q => answers[q.id]?.trim()).length;
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 p-6">
+    <div className="min-h-screen bg-slate-50 p-6">
       <div className="max-w-3xl mx-auto">
         <div className="flex items-center gap-3 mb-4">
-          <Link to="/student" className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition">
+          <Link to="/student" className="text-slate-500 hover:text-slate-900 transition">
             <ArrowLeft className="w-5 h-5" />
           </Link>
           <div className="flex-1">
-            <h1 className="text-slate-900 dark:text-white text-xl font-bold">{assignment.title}</h1>
-            <div className="flex items-center gap-3 mt-1 text-xs text-slate-500 dark:text-slate-400">
+            <h1 className="text-slate-900 text-xl font-bold">{assignment.title}</h1>
+            <div className="flex items-center gap-3 mt-1 text-xs text-slate-500">
               <span>{assignment.type.toUpperCase()}</span>
               <span>· {assignment.total_points} pts</span>
               {assignment.deadline && <span className="flex items-center gap-1"><Clock className="w-3 h-3" />Due {new Date(assignment.deadline).toLocaleString()}</span>}
             </div>
           </div>
-          <div className="text-slate-500 dark:text-slate-400 text-sm">{answeredCount} / {questions.length}</div>
+          <div className="text-slate-500 text-sm">{answeredCount} / {questions.length}</div>
         </div>
 
         {/* Progress bar */}
         <div className="mb-6">
-          <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mb-1.5">
+          <div className="flex items-center justify-between text-xs text-slate-500 mb-1.5">
             <span>{answeredCount} of {questions.length} answered</span>
             <span>{questions.length > 0 ? Math.round((answeredCount / questions.length) * 100) : 0}%</span>
           </div>
-          <div className="h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+          <div className="h-1.5 bg-slate-200 rounded-full overflow-hidden">
             <div className="h-full bg-indigo-500 rounded-full transition-all" style={{ width: questions.length > 0 ? `${(answeredCount / questions.length) * 100}%` : '0%' }} />
           </div>
         </div>
 
         {assignment.description && (
-          <div className="card-glass p-4 mb-6 text-slate-700 dark:text-slate-300 text-sm">
+          <div className="card-glass p-4 mb-6 text-slate-700 text-sm">
             {assignment.description}
           </div>
         )}
@@ -150,8 +150,8 @@ export default function AssignmentTake() {
             <div key={q.id} className="card-glass p-5">
               <div className="flex items-start justify-between gap-4 mb-3">
                 <div>
-                  <div className="text-slate-500 dark:text-slate-400 text-xs mb-1">Question {i + 1} · {q.points} pts</div>
-                  <div className="text-slate-900 dark:text-white text-sm font-medium">{q.question_text}</div>
+                  <div className="text-slate-500 text-xs mb-1">Question {i + 1} · {q.points} pts</div>
+                  <div className="text-slate-900 text-sm font-medium">{q.question_text}</div>
                 </div>
                 {answers[q.id] && <CheckCircle className="w-5 h-5 text-green-400 shrink-0 mt-1" />}
               </div>
@@ -160,20 +160,20 @@ export default function AssignmentTake() {
                 <div className="space-y-2">
                   {q.options.map(opt => (
                     <label key={opt.label}
-                      className={`flex items-center gap-3 px-4 py-3 rounded-xl border cursor-pointer transition ${answers[q.id] === opt.label ? 'border-indigo-500 bg-indigo-600/10' : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'}`}>
+                      className={`flex items-center gap-3 px-4 py-3 rounded-xl border cursor-pointer transition ${answers[q.id] === opt.label ? 'border-indigo-500 bg-indigo-600/10' : 'border-slate-200 hover:border-slate-300'}`}>
                       <input type="radio" name={q.id} value={opt.label} checked={answers[q.id] === opt.label}
                         onChange={() => setAnswers(prev => ({ ...prev, [q.id]: opt.label }))} className="sr-only" />
-                      <div className={`w-7 h-7 rounded-full border-2 flex items-center justify-center text-xs font-bold shrink-0 transition ${answers[q.id] === opt.label ? 'border-indigo-500 bg-indigo-600 text-white' : 'border-slate-300 dark:border-slate-600 text-slate-500 dark:text-slate-400'}`}>
+                      <div className={`w-7 h-7 rounded-full border-2 flex items-center justify-center text-xs font-bold shrink-0 transition ${answers[q.id] === opt.label ? 'border-indigo-500 bg-indigo-600 text-white' : 'border-slate-300 text-slate-500'}`}>
                         {opt.label}
                       </div>
-                      <span className="text-slate-900 dark:text-white text-sm">{opt.text}</span>
+                      <span className="text-slate-900 text-sm">{opt.text}</span>
                     </label>
                   ))}
                 </div>
               ) : (
                 <textarea value={answers[q.id] ?? ''} onChange={e => setAnswers(prev => ({ ...prev, [q.id]: e.target.value }))}
                   rows={4} placeholder="Write your answer here..."
-                  className="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition resize-none text-sm" />
+                  className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:border-indigo-500 transition resize-none text-sm" />
               )}
             </div>
           ))}
@@ -187,3 +187,4 @@ export default function AssignmentTake() {
     </div>
   );
 }
+

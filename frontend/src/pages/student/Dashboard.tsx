@@ -107,12 +107,11 @@ export default function StudentDashboard() {
       <section className="mb-8">
         <div className="flex items-center justify-between mb-5">
           <div>
-            <h2 className="font-bold text-xl" style={{ color: 'var(--ink)', letterSpacing: '-0.02em' }}>My Classes</h2>
-            <p className="text-sm mt-0.5" style={{ color: 'var(--ink-3)' }}>{classes.length} enrolled</p>
+            <h2 className="font-bold text-xl text-zinc-950" style={{ letterSpacing: '-0.02em' }}>My Classes</h2>
+            <p className="text-sm mt-0.5 text-zinc-600">{classes.length} enrolled</p>
           </div>
           <Link to="/student/classes"
-            className="flex items-center gap-1.5 text-sm font-semibold hover:underline"
-            style={{ color: 'var(--blue)' }}>
+            className="flex items-center gap-1.5 text-sm font-semibold hover:underline text-violet-600">
             View all <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
@@ -122,10 +121,10 @@ export default function StudentDashboard() {
           </div>
         ) : classes.length === 0 ? (
           <div className="card-glass p-12 text-center">
-            <div className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center" style={{ background: 'var(--bg-section)' }}>
-              <BookOpen className="w-7 h-7" style={{ color: 'var(--ink-4)' }} />
+            <div className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center bg-zinc-100">
+              <BookOpen className="w-7 h-7 text-zinc-500" />
             </div>
-            <p className="font-medium" style={{ color: 'var(--ink-3)' }}>You're not enrolled in any classes yet.</p>
+            <p className="font-medium text-zinc-600">You're not enrolled in any classes yet.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
