@@ -36,29 +36,21 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex">
-      {/* ── Left hero panel ── */}
+      {/* Left hero panel */}
       <div className="hidden lg:flex lg:w-[55%] relative overflow-hidden">
-        {/* Background image */}
-        <img
-          src={BG}
-          alt="Students learning together"
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-        {/* Overlay */}
+        <img src={BG} alt="Students learning together" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0" style={{
           background: 'linear-gradient(135deg, rgba(0,56,120,0.92) 0%, rgba(0,86,210,0.80) 50%, rgba(0,153,204,0.75) 100%)'
         }} />
 
         <div className="relative z-10 flex flex-col justify-between p-14 w-full">
-          {/* Logo */}
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30">
               <BookOpen className="w-5 h-5 text-white" />
             </div>
-            <span className="font-bold text-white text-xl tracking-tight">AI-Mentor</span>
+            <span className="font-bold text-white text-xl tracking-tight">Luma</span>
           </div>
 
-          {/* Headline */}
           <div>
             <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm rounded-full px-4 py-1.5 mb-6 border border-white/20">
               <Sparkles className="w-3.5 h-3.5 text-blue-200" />
@@ -74,7 +66,6 @@ export default function Login() {
               Empowering students and educators with AI-driven insights, instant feedback, and deeply personalized guidance.
             </p>
 
-            {/* Feature cards */}
             <div className="space-y-3 mb-10">
               {features.map(({ icon: Icon, title, desc }) => (
                 <div key={title} className="flex items-start gap-4 bg-white/10 backdrop-blur-sm rounded-2xl px-5 py-4 border border-white/15">
@@ -89,7 +80,6 @@ export default function Login() {
               ))}
             </div>
 
-            {/* Stats row */}
             <div className="flex gap-6">
               {stats.map(({ value, label }) => (
                 <div key={label} className="text-center">
@@ -102,73 +92,55 @@ export default function Login() {
         </div>
       </div>
 
-      {/* ── Right form panel ── */}
-      <div className="flex-1 flex items-center justify-center px-8 py-12 bg-white">
+      {/* Right form panel */}
+      <div className="flex-1 flex items-center justify-center px-8 py-12" style={{ background: 'var(--bg-card)' }}>
         <div className="w-full max-w-[380px]">
-
-          {/* Mobile logo */}
           <div className="flex items-center gap-3 mb-8 lg:hidden">
-            <div className="w-10 h-10 rounded-2xl flex items-center justify-center bg-gradient-to-r from-blue-500 to-blue-600">
+            <div className="w-10 h-10 rounded-2xl flex items-center justify-center bg-gradient-to-r from-violet-500 to-violet-600">
               <BookOpen className="w-5 h-5 text-white" />
             </div>
-            <span className="font-bold text-xl text-zinc-950">AI-Mentor</span>
+            <span className="font-bold text-xl" style={{ color: 'var(--ink)' }}>Luma</span>
           </div>
 
           <div className="mb-8">
-            <h1 className="font-bold text-3xl mb-2 text-zinc-950" style={{ letterSpacing: '-0.03em' }}>
+            <h1 className="font-bold text-3xl mb-2" style={{ color: 'var(--ink)', letterSpacing: '-0.03em' }}>
               Welcome back
             </h1>
-            <p className="text-base text-zinc-600">
+            <p className="text-base" style={{ color: 'var(--ink-3)' }}>
               Sign in to continue your learning journey
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-1.5">
-              <label className="block text-sm font-semibold text-zinc-900">
-                Email address
-              </label>
-              <input
-                type="email" required value={email}
-                onChange={e => setEmail(e.target.value)}
-                placeholder="you@institution.com"
-                className="form-input"
-              />
+              <label className="block text-sm font-semibold" style={{ color: 'var(--ink-2)' }}>Email address</label>
+              <input type="email" required value={email} onChange={e => setEmail(e.target.value)}
+                placeholder="you@institution.com" className="form-input" />
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-sm font-semibold text-zinc-900">
-                Password
-              </label>
-              <input
-                type="password" required value={password}
-                onChange={e => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="form-input"
-              />
+              <label className="block text-sm font-semibold" style={{ color: 'var(--ink-2)' }}>Password</label>
+              <input type="password" required value={password} onChange={e => setPassword(e.target.value)}
+                placeholder="••••••••" className="form-input" />
             </div>
 
             <button type="submit" disabled={loading} className="btn-gradient w-full py-3 justify-center text-base font-bold">
               {loading
                 ? <><Loader2 className="w-4 h-4 animate-spin" /> Signing in…</>
-                : <><span>Sign In</span><ArrowRight className="w-4 h-4" /></>
-              }
+                : <><span>Sign In</span><ArrowRight className="w-4 h-4" /></>}
             </button>
           </form>
 
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full h-px bg-zinc-300" />
+              <div className="w-full h-px" style={{ background: 'var(--border)' }} />
             </div>
             <div className="relative flex justify-center">
-              <span className="px-4 text-xs bg-white text-zinc-500">New to AI-Mentor?</span>
+              <span className="px-4 text-xs" style={{ background: 'var(--bg-card)', color: 'var(--ink-4)' }}>New to Luma?</span>
             </div>
           </div>
 
-          <Link
-            to="/register"
-            className="btn-secondary w-full py-3 justify-center text-sm"
-          >
+          <Link to="/register" className="btn-secondary w-full py-3 justify-center text-sm">
             Create a free account
           </Link>
         </div>

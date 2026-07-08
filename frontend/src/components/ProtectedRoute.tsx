@@ -1,32 +1,25 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { useAuth, UserRole } from '../contexts/AuthContext';
+import { useAuth } from '../contexts/AuthContext';
 import { Loader2 } from 'lucide-react';
 
 interface ProtectedRouteProps {
-  allowedRoles?: UserRole[];
+  allowedRoles?: string[];
 }
 
 export default function ProtectedRoute({ allowedRoles }: ProtectedRouteProps) {
-  const { session, profile, loading } = useAuth();
+  const { user, profile, loading } = useAuth();
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
-        <Loader2 className="w-8 h-8 text-indigo-500 animate-spin" />
+      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg-page)' }}>
+        <Loader2 className="w-6 h-6 animate-spin" style={{ color: 'var(--blue)' }} />
       </div>
     );
   }
 
-  if (!session) return <Navigate to="/login" replace />;
-
+  if (!user) return <Navigate to="/login" replace />;
   if (allowedRoles && profile && !allowedRoles.includes(profile.role)) {
-    // Redirect to their correct dashboard
-    const roleRoutes: Record<UserRole, string> = {
-      admin: '/admin',
-      teacher: '/teacher',
-      student: '/student',
-    };
-    return <Navigate to={roleRoutes[profile.role]} replace />;
+    return <Navigate to="/dashboard" replace />;
   }
 
   return <Outlet />;

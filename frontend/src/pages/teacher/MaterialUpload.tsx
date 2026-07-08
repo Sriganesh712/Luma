@@ -63,29 +63,29 @@ export default function MaterialUpload() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 p-6">
+    <div className="min-h-screen  p-6">
       <div className="max-w-lg mx-auto">
         <div className="flex items-center gap-3 mb-6">
-          <Link to={classId ? `/teacher/classes/${classId}` : '/teacher'} className="text-slate-500 hover:text-slate-900 transition">
+          <Link to={classId ? `/teacher/classes/${classId}` : '/teacher'} className=" hover: transition">
             <ArrowLeft className="w-5 h-5" />
           </Link>
-          <h1 className="text-slate-900 text-xl font-bold">Upload Material</h1>
+          <h1 className=" text-xl font-bold">Upload Material</h1>
         </div>
 
         <div className="card-glass p-6">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Title *</label>
+              <label className="block text-sm font-medium  mb-1.5">Title *</label>
               <input value={title} onChange={e => setTitle(e.target.value)} required placeholder="e.g. Chapter 3 - Photosynthesis"
-                className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:border-indigo-500 transition" />
+                className="w-full px-4 py-2.5 card-glass rounded-xl   focus:outline-none focus:border-indigo-500 transition" />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Type *</label>
+              <label className="block text-sm font-medium  mb-1.5">Type *</label>
               <div className="grid grid-cols-3 gap-2">
                 {MATERIAL_TYPES.map(t => (
                   <button key={t} type="button" onClick={() => setType(t)}
-                    className={`py-2 text-sm font-medium rounded-xl border transition uppercase ${type === t ? 'border-indigo-500 bg-indigo-600/10 text-indigo-400' : 'border-slate-200 bg-slate-50 text-slate-500 hover:border-slate-300'}`}>
+                    className={`py-2 text-sm font-medium rounded-xl border transition uppercase ${type === t ? 'border-indigo-500 bg-indigo-600/10 text-indigo-400' : '   hover:'}`}>
                     {t}
                   </button>
                 ))}
@@ -93,33 +93,33 @@ export default function MaterialUpload() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Description</label>
+              <label className="block text-sm font-medium  mb-1.5">Description</label>
               <textarea value={description} onChange={e => setDescription(e.target.value)} rows={2} placeholder="Optional description..."
-                className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:border-indigo-500 transition resize-none" />
+                className="w-full px-4 py-2.5 card-glass rounded-xl   focus:outline-none focus:border-indigo-500 transition resize-none" />
             </div>
 
             {isLinkType ? (
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5 flex items-center gap-2"><Link2 className="w-4 h-4" /> URL *</label>
+                <label className="block text-sm font-medium  mb-1.5 flex items-center gap-2"><Link2 className="w-4 h-4" /> URL *</label>
                 <input value={externalUrl} onChange={e => setExternalUrl(e.target.value)} type="url" placeholder="https://..."
-                  className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:border-indigo-500 transition" />
+                  className="w-full px-4 py-2.5 card-glass rounded-xl   focus:outline-none focus:border-indigo-500 transition" />
               </div>
             ) : (
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5 flex items-center gap-2"><Upload className="w-4 h-4" /> File *</label>
-                <label className={`flex flex-col items-center justify-center border-2 border-dashed rounded-2xl px-4 py-10 cursor-pointer transition ${file ? 'border-indigo-500 bg-indigo-50' : 'border-slate-300 hover:border-indigo-400 hover:bg-indigo-50/50'}`}>
+                <label className="block text-sm font-medium  mb-1.5 flex items-center gap-2"><Upload className="w-4 h-4" /> File *</label>
+                <label className={`flex flex-col items-center justify-center border-2 border-dashed rounded-2xl px-4 py-10 cursor-pointer transition ${file ? 'border-indigo-500 bg-indigo-50' : ' hover:border-indigo-400 hover:bg-indigo-50/50'}`}>
                   <input type="file" className="hidden" accept={type === 'pdf' ? '.pdf' : type === 'pptx' ? '.pptx,.ppt' : type === 'docx' ? '.docx,.doc' : '*'}
                     onChange={e => setFile(e.target.files?.[0] ?? null)} />
                   {file ? (
                     <><div className="text-indigo-600 font-semibold text-sm">{file.name}</div>
-                      <div className="text-slate-500 text-xs mt-1">{(file.size / 1024 / 1024).toFixed(2)} MB · Click to change</div></>
+                      <div className=" text-xs mt-1">{(file.size / 1024 / 1024).toFixed(2)} MB · Click to change</div></>
                   ) : (
                     <>
-                      <div className="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center mb-3">
-                        <Upload className="w-6 h-6 text-slate-400" />
+                      <div className="w-12 h-12 rounded-xl  flex items-center justify-center mb-3">
+                        <Upload className="w-6 h-6 " />
                       </div>
-                      <div className="text-slate-700 font-semibold text-sm">Click to browse or drag &amp; drop</div>
-                      <div className="text-slate-400 text-xs mt-1 uppercase">{type} files accepted</div>
+                      <div className=" font-semibold text-sm">Click to browse or drag &amp; drop</div>
+                      <div className=" text-xs mt-1 uppercase">{type} files accepted</div>
                     </>
                   )}
                 </label>

@@ -107,11 +107,11 @@ export default function StudentDashboard() {
       <section className="mb-8">
         <div className="flex items-center justify-between mb-5">
           <div>
-            <h2 className="font-bold text-xl text-zinc-950" style={{ letterSpacing: '-0.02em' }}>My Classes</h2>
-            <p className="text-sm mt-0.5 text-zinc-600">{classes.length} enrolled</p>
+            <h2 className="font-bold text-xl " style={{ letterSpacing: '-0.02em' }}>My Classes</h2>
+            <p className="text-sm mt-0.5 ">{classes.length} enrolled</p>
           </div>
           <Link to="/student/classes"
-            className="flex items-center gap-1.5 text-sm font-semibold hover:underline text-violet-600">
+            className="flex items-center gap-1.5 text-sm font-semibold hover:underline ">
             View all <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
@@ -121,10 +121,10 @@ export default function StudentDashboard() {
           </div>
         ) : classes.length === 0 ? (
           <div className="card-glass p-12 text-center">
-            <div className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center bg-zinc-100">
-              <BookOpen className="w-7 h-7 text-zinc-500" />
+            <div className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center ">
+              <BookOpen className="w-7 h-7 " />
             </div>
-            <p className="font-medium text-zinc-600">You're not enrolled in any classes yet.</p>
+            <p className="font-medium ">You're not enrolled in any classes yet.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -139,13 +139,13 @@ export default function StudentDashboard() {
                   </span>
                 </div>
                 <div className="p-4">
-                  <h3 className="font-semibold text-sm mb-1 text-zinc-950">{cls.name}</h3>
-                  {cls.teacher && <p className="text-xs text-zinc-500">by {cls.teacher.name}</p>}
+                  <h3 className="font-semibold text-sm mb-1 ">{cls.name}</h3>
+                  {cls.teacher && <p className="text-xs ">by {cls.teacher.name}</p>}
                   <div className="mt-3 flex items-center justify-between">
-                    <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-violet-50 text-violet-600">
+                    <span className="text-xs font-medium px-2 py-0.5 rounded-full  ">
                       Enrolled
                     </span>
-                    <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity text-violet-600" />
+                    <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity " />
                   </div>
                 </div>
               </Link>
@@ -158,40 +158,40 @@ export default function StudentDashboard() {
       <section>
         <div className="flex items-center justify-between mb-5">
           <div>
-            <h2 className="font-bold text-xl text-zinc-950" style={{ letterSpacing: '-0.02em' }}>Assignments</h2>
-            <p className="text-sm mt-0.5 text-zinc-600">{pending} pending</p>
+            <h2 className="font-bold text-xl " style={{ letterSpacing: '-0.02em' }}>Assignments</h2>
+            <p className="text-sm mt-0.5 ">{pending} pending</p>
           </div>
           <Link to="/student/assignments"
-            className="flex items-center gap-1.5 text-sm font-semibold hover:underline text-violet-600">
+            className="flex items-center gap-1.5 text-sm font-semibold hover:underline ">
             View all <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
         <div className="card-glass overflow-hidden">
           {loading ? (
-            <div className="p-6 text-center text-sm text-zinc-500">Loading…</div>
+            <div className="p-6 text-center text-sm ">Loading…</div>
           ) : assignments.length === 0 ? (
             <div className="p-12 text-center">
-              <div className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center bg-zinc-100">
-                <ClipboardList className="w-7 h-7 text-zinc-500" />
+              <div className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center ">
+                <ClipboardList className="w-7 h-7 " />
               </div>
-              <p className="font-medium text-zinc-600">No assignments right now. 🎉</p>
+              <p className="font-medium ">No assignments right now. 🎉</p>
             </div>
           ) : (
-            <div className="divide-y border-zinc-300">
+            <div className="divide-y ">
               {assignments.map(a => (
                 <Link key={a.id} to={`/student/assignments/${a.id}`}
-                  className="flex items-center gap-4 px-5 py-4 hover:bg-blue-50/50 transition group">
+                  className="flex items-center gap-4 px-5 py-4 hover:/50 dark:hover:bg-violet-900/10 transition group">
                   <div className={`w-1 h-10 rounded-full shrink-0 ${a.submitted ? 'bg-emerald-400' : 'bg-amber-400'}`} />
                   <div className="flex-1 min-w-0">
-                    <div className="text-sm font-semibold truncate text-zinc-950">{a.title}</div>
+                    <div className="text-sm font-semibold truncate ">{a.title}</div>
                     <div className="flex items-center gap-2 flex-wrap mt-0.5">
-                      <span className="text-xs text-zinc-500">{a.class?.name}</span>
-                      <span className="text-zinc-400">·</span>
-                      <span className="text-xs uppercase tracking-wide font-medium text-zinc-500">{a.type}</span>
+                      <span className="text-xs ">{a.class?.name}</span>
+                      <span className="">·</span>
+                      <span className="text-xs uppercase tracking-wide font-medium ">{a.type}</span>
                       {a.deadline && (
                         <>
-                          <span className="text-zinc-400">·</span>
-                          <span className="flex items-center gap-1 text-xs text-zinc-500">
+                          <span className="">·</span>
+                          <span className="flex items-center gap-1 text-xs ">
                             <Clock className="w-3 h-3" />
                             {new Date(a.deadline).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                           </span>

@@ -105,10 +105,10 @@ export default function TeacherDashboard() {
       <section className="mb-8">
         <div className="flex items-center justify-between mb-5">
           <div>
-            <h2 className="font-bold text-xl text-zinc-950" style={{ letterSpacing: '-0.02em' }}>My Classes</h2>
-            <p className="text-sm mt-0.5 text-zinc-600">{classes.length} active</p>
+            <h2 className="font-bold text-xl " style={{ letterSpacing: '-0.02em' }}>My Classes</h2>
+            <p className="text-sm mt-0.5 ">{classes.length} active</p>
           </div>
-          <Link to="/teacher/classes" className="flex items-center gap-1.5 text-sm font-semibold hover:underline text-violet-600">
+          <Link to="/teacher/classes" className="flex items-center gap-1.5 text-sm font-semibold hover:underline ">
             View all <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
@@ -118,10 +118,10 @@ export default function TeacherDashboard() {
           </div>
         ) : classes.length === 0 ? (
           <div className="card-glass p-12 text-center">
-            <div className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center bg-zinc-100">
-              <BookOpen className="w-7 h-7 text-zinc-500" />
+            <div className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center ">
+              <BookOpen className="w-7 h-7 " />
             </div>
-            <p className="font-medium text-zinc-600">No classes assigned yet.</p>
+            <p className="font-medium ">No classes assigned yet.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -136,13 +136,13 @@ export default function TeacherDashboard() {
                   </span>
                 </div>
                 <div className="p-4">
-                  <h3 className="font-semibold text-sm mb-1 text-zinc-950">{cls.name}</h3>
-                  <div className="flex items-center gap-1.5 text-xs text-zinc-500">
+                  <h3 className="font-semibold text-sm mb-1 ">{cls.name}</h3>
+                  <div className="flex items-center gap-1.5 text-xs ">
                     <Users className="w-3.5 h-3.5" />
                     {cls.studentCount} students
                   </div>
                   <div className="mt-3 flex justify-end">
-                    <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity text-violet-600" />
+                    <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity " />
                   </div>
                 </div>
               </Link>
@@ -155,33 +155,33 @@ export default function TeacherDashboard() {
       <section>
         <div className="flex items-center justify-between mb-5">
           <div>
-            <h2 className="font-bold text-xl text-zinc-950" style={{ letterSpacing: '-0.02em' }}>Recent Assignments</h2>
+            <h2 className="font-bold text-xl " style={{ letterSpacing: '-0.02em' }}>Recent Assignments</h2>
           </div>
-          <Link to="/teacher/assignments" className="flex items-center gap-1.5 text-sm font-semibold hover:underline text-violet-600">
+          <Link to="/teacher/assignments" className="flex items-center gap-1.5 text-sm font-semibold hover:underline ">
             View all <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
         <div className="card-glass overflow-hidden">
           {loading ? (
-            <div className="p-6 text-center text-sm text-zinc-500">Loading…</div>
+            <div className="p-6 text-center text-sm ">Loading…</div>
           ) : assignments.length === 0 ? (
             <div className="p-12 text-center">
-              <div className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center bg-zinc-100">
-                <ClipboardList className="w-7 h-7 text-zinc-500" />
+              <div className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center ">
+                <ClipboardList className="w-7 h-7 " />
               </div>
-              <p className="font-medium text-zinc-600">No assignments yet.</p>
-              <Link to="/teacher/assignments/new" className="text-sm font-semibold mt-1 block hover:underline text-violet-600">
+              <p className="font-medium ">No assignments yet.</p>
+              <Link to="/teacher/assignments/new" className="text-sm font-semibold mt-1 block hover:underline ">
                 Create your first →
               </Link>
             </div>
           ) : (
-            <div className="divide-y border-zinc-300">
+            <div className="divide-y ">
               {assignments.map(a => (
                 <Link key={a.id} to={`/teacher/assignments/${a.id}`}
-                  className="flex items-center justify-between px-5 py-4 hover:bg-blue-50/50 transition">
+                  className="flex items-center justify-between px-5 py-4 hover:/50 dark:hover:bg-violet-900/10 transition">
                   <div className="flex-1 min-w-0 mr-4">
-                    <div className="text-sm font-semibold truncate text-zinc-950">{a.title}</div>
-                    <div className="flex items-center gap-2 flex-wrap mt-0.5 text-xs text-zinc-500">
+                    <div className="text-sm font-semibold truncate ">{a.title}</div>
+                    <div className="flex items-center gap-2 flex-wrap mt-0.5 text-xs ">
                       <span>{a.class?.name}</span>
                       <span>·</span>
                       <span className="uppercase tracking-wide">{a.type}</span>

@@ -13,9 +13,9 @@ const ROLES: { value: UserRole; label: string; description: string; color: strin
 ];
 
 const features = [
-  { icon: Brain,      text: 'AI-Powered Learning'  },
-  { icon: TrendingUp, text: 'Real-time Analytics'  },
-  { icon: Sparkles,   text: 'Smart Feedback'        },
+  { icon: Brain,      text: 'AI-Powered Learning' },
+  { icon: TrendingUp, text: 'Real-time Analytics' },
+  { icon: Sparkles,   text: 'Smart Feedback' },
 ];
 
 export default function Register() {
@@ -56,7 +56,7 @@ export default function Register() {
 
   return (
     <div className="min-h-screen flex">
-      {/* ── Left hero panel ── */}
+      {/* Left hero panel */}
       <div className="hidden lg:flex lg:w-[45%] relative overflow-hidden">
         <img src={BG} alt="Education" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0" style={{
@@ -67,14 +67,14 @@ export default function Register() {
             <div className="w-10 h-10 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30">
               <BookOpen className="w-5 h-5 text-white" />
             </div>
-            <span className="font-bold text-white text-xl tracking-tight">AI-Mentor</span>
+            <span className="font-bold text-white text-xl tracking-tight">Luma</span>
           </div>
           <div>
             <h2 className="font-bold text-4xl text-white leading-tight tracking-tight mb-4">
               Start your learning<br />journey today
             </h2>
             <p className="text-blue-200 text-base mb-10 leading-relaxed">
-              Join thousands of students and educators already using AI-Mentor.
+              Join thousands of students and educators already using Luma.
             </p>
             <div className="space-y-3">
               {features.map(({ icon: Icon, text }) => (
@@ -91,52 +91,51 @@ export default function Register() {
         </div>
       </div>
 
-      {/* ── Right form panel ── */}
-      <div className="flex-1 flex items-center justify-center px-8 py-12 bg-white overflow-y-auto">
+      {/* Right form panel */}
+      <div className="flex-1 flex items-center justify-center px-8 py-12 overflow-y-auto" style={{ background: 'var(--bg-card)' }}>
         <div className="w-full max-w-[400px]">
-          {/* Mobile logo */}
           <div className="flex items-center gap-3 mb-6 lg:hidden">
-            <div className="w-10 h-10 rounded-2xl flex items-center justify-center bg-gradient-to-r from-blue-500 to-blue-600">
+            <div className="w-10 h-10 rounded-2xl flex items-center justify-center bg-gradient-to-r from-violet-500 to-violet-600">
               <BookOpen className="w-5 h-5 text-white" />
             </div>
-            <span className="font-bold text-xl text-zinc-950">AI-Mentor</span>
+            <span className="font-bold text-xl" style={{ color: 'var(--ink)' }}>Luma</span>
           </div>
 
-          <h1 className="font-bold text-3xl mb-1 text-zinc-950" style={{ letterSpacing: '-0.03em' }}>
+          <h1 className="font-bold text-3xl mb-1" style={{ color: 'var(--ink)', letterSpacing: '-0.03em' }}>
             Create account
           </h1>
-          <p className="text-sm mb-5 text-zinc-600">Step {step} of 2</p>
+          <p className="text-sm mb-5" style={{ color: 'var(--ink-3)' }}>Step {step} of 2</p>
 
           {/* Step progress */}
           <div className="flex items-center gap-2 mb-6">
             {[1, 2].map(n => (
               <div key={n} className="h-1.5 rounded-full flex-1 transition-all"
-                style={{ background: step >= n ? '#7c3aed' : '#d4d4d8' }} />
+                style={{ background: step >= n ? 'var(--blue)' : 'var(--border)' }} />
             ))}
           </div>
 
           {step === 1 ? (
             <form onSubmit={handleNextStep} className="space-y-4">
-              <h2 className="text-sm font-bold mb-4 uppercase tracking-widest text-zinc-500">
+              <h2 className="text-sm font-bold mb-4 uppercase tracking-widest" style={{ color: 'var(--ink-4)' }}>
                 Personal Information
               </h2>
               <div className="space-y-1.5">
-                <label className="block text-sm font-semibold text-zinc-900">Full Name</label>
+                <label className="block text-sm font-semibold" style={{ color: 'var(--ink-2)' }}>Full Name</label>
                 <input type="text" required value={form.name} onChange={e => update('name', e.target.value)}
                   placeholder="Your full name" className="form-input" />
               </div>
               <div className="space-y-1.5">
-                <label className="block text-sm font-semibold text-zinc-900">Email</label>
+                <label className="block text-sm font-semibold" style={{ color: 'var(--ink-2)' }}>Email</label>
                 <input type="email" required value={form.email} onChange={e => update('email', e.target.value)}
                   placeholder="you@institution.com" className="form-input" />
               </div>
               <div className="space-y-1.5">
-                <label className="block text-sm font-semibold text-zinc-900">Password</label>
+                <label className="block text-sm font-semibold" style={{ color: 'var(--ink-2)' }}>Password</label>
                 <input type="password" required value={form.password} onChange={e => update('password', e.target.value)}
                   placeholder="Min. 6 characters" className="form-input" />
               </div>
               <div className="space-y-1.5">
-                <label className="block text-sm font-semibold text-zinc-900">Confirm Password</label>
+                <label className="block text-sm font-semibold" style={{ color: 'var(--ink-2)' }}>Confirm Password</label>
                 <input type="password" required value={form.confirmPassword} onChange={e => update('confirmPassword', e.target.value)}
                   placeholder="Repeat password" className="form-input" />
               </div>
@@ -146,28 +145,28 @@ export default function Register() {
             </form>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-5">
-              <h2 className="text-sm font-bold mb-4 uppercase tracking-widest text-zinc-500">
+              <h2 className="text-sm font-bold mb-4 uppercase tracking-widest" style={{ color: 'var(--ink-4)' }}>
                 Role & Institution
               </h2>
               <div>
-                <label className="block text-sm font-semibold mb-2 text-zinc-900">I am a...</label>
+                <label className="block text-sm font-semibold mb-2" style={{ color: 'var(--ink-2)' }}>I am a...</label>
                 <div className="space-y-2">
                   {ROLES.map(r => (
                     <button key={r.value} type="button" onClick={() => setForm(p => ({ ...p, role: r.value }))}
                       className="w-full text-left px-4 py-3 rounded-xl border-2 transition-all"
                       style={{
-                        borderColor: form.role === r.value ? r.color : '#d4d4d8',
-                        background: form.role === r.value ? `${r.color}08` : 'white',
+                        borderColor: form.role === r.value ? r.color : 'var(--border)',
+                        background: form.role === r.value ? `${r.color}08` : 'var(--bg-card)',
                       }}>
                       <div className="flex items-center justify-between">
-                        <div className="font-semibold text-sm text-zinc-950">{r.label}</div>
+                        <div className="font-semibold text-sm" style={{ color: 'var(--ink)' }}>{r.label}</div>
                         {form.role === r.value && (
                           <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ background: r.color }}>
                             <Check className="w-3 h-3 text-white" />
                           </div>
                         )}
                       </div>
-                      <div className="text-xs mt-0.5 text-zinc-500">{r.description}</div>
+                      <div className="text-xs mt-0.5" style={{ color: 'var(--ink-4)' }}>{r.description}</div>
                     </button>
                   ))}
                 </div>
@@ -175,18 +174,18 @@ export default function Register() {
 
               {form.role === 'admin' ? (
                 <div className="space-y-1.5">
-                  <label className="block text-sm font-semibold text-zinc-900">Institution Name</label>
+                  <label className="block text-sm font-semibold" style={{ color: 'var(--ink-2)' }}>Institution Name</label>
                   <input type="text" required value={form.institutionName} onChange={e => update('institutionName', e.target.value)}
                     placeholder="e.g. Springfield High School" className="form-input" />
-                  <p className="text-xs mt-1 text-zinc-500">A unique institution code will be generated for you.</p>
+                  <p className="text-xs mt-1" style={{ color: 'var(--ink-4)' }}>A unique institution code will be generated for you.</p>
                 </div>
               ) : (
                 <div className="space-y-1.5">
-                  <label className="block text-sm font-semibold text-zinc-900">Institution Code</label>
+                  <label className="block text-sm font-semibold" style={{ color: 'var(--ink-2)' }}>Institution Code</label>
                   <input type="text" required value={form.institutionCode}
                     onChange={e => update('institutionCode', e.target.value.toUpperCase())}
                     placeholder="e.g. A1B2C3" maxLength={6} className="form-input font-mono tracking-widest" />
-                  <p className="text-xs mt-1 text-zinc-500">Ask your institution admin for the 6-character code.</p>
+                  <p className="text-xs mt-1" style={{ color: 'var(--ink-4)' }}>Ask your institution admin for the 6-character code.</p>
                 </div>
               )}
 
@@ -202,9 +201,9 @@ export default function Register() {
             </form>
           )}
 
-          <p className="text-center text-sm mt-6 text-zinc-500">
+          <p className="text-center text-sm mt-6" style={{ color: 'var(--ink-4)' }}>
             Already have an account?{' '}
-            <Link to="/login" className="font-semibold hover:underline transition text-violet-600">
+            <Link to="/login" className="font-semibold hover:underline transition" style={{ color: 'var(--blue)' }}>
               Sign in →
             </Link>
           </p>

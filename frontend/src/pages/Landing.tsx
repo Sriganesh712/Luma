@@ -1,12 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Star, Users, Calendar, TrendingUp, CheckCircle, Zap, Shield } from 'lucide-react';
-
-const testimonials = [
-  { id: 1, rating: 5, text: "AI-Mentor transformed how I learn. The structured curriculum and AI guidance helped me go from beginner to intermediate in 3 months.", studentName: "Alex Chen", avatar: "https://i.pravatar.cc/80?img=11", mentorName: "Dr. Sarah", role: "AI Expert" },
-  { id: 2, rating: 5, text: "The most intuitive learning platform I've used. Progress tracking kept me motivated, and the assignments are perfectly challenging.", studentName: "Priya Sharma", avatar: "https://i.pravatar.cc/80?img=12", mentorName: "Marcus J.", role: "Instructor" },
-  { id: 3, rating: 5, text: "Finally, a platform that truly understands personalized learning. Highly recommend to anyone serious about their education.", studentName: "Jordan Lee", avatar: "https://i.pravatar.cc/80?img=13", mentorName: "Priya S.", role: "Educator" },
-];
+import { ArrowRight, Users, Calendar, TrendingUp, CheckCircle, Zap, Shield, BookOpen } from 'lucide-react';
+import ThemeToggle from '../components/ThemeToggle';
 
 const features = [
   { icon: Users, title: "Expert Instructors", desc: "Learn from qualified educators and industry professionals." },
@@ -15,13 +10,6 @@ const features = [
   { icon: Zap, title: "AI-Powered Learning", desc: "Personalized recommendations based on your learning style." },
   { icon: CheckCircle, title: "Certified Content", desc: "Curriculum designed by industry experts and verified." },
   { icon: Shield, title: "Safe & Secure", desc: "Enterprise-grade security for all your learning data." },
-];
-
-const steps = [
-  { num: "01", title: "Create Your Profile", desc: "Tell us about your goals and preferred learning style." },
-  { num: "02", title: "Browse Courses", desc: "Explore our curated collection of high-quality courses." },
-  { num: "03", title: "Start Learning", desc: "Join classes, complete assignments, and track progress." },
-  { num: "04", title: "Achieve Goals", desc: "Earn certificates and reach your educational milestones." },
 ];
 
 const stats = [
@@ -87,112 +75,76 @@ function ScrollReveal({ children, delay = 0 }: { children: React.ReactNode; dela
 
 export default function Landing() {
   return (
-    <div className="bg-white text-zinc-900 overflow-x-hidden font-sans">
-      {/* ── Hero Section ── */}
-      <section className="relative min-h-screen flex items-center overflow-hidden">
-        {/* Background image with overlay */}
-        <div className="absolute inset-0">
-          <img
-            src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1800&q=80&auto=format&fit=crop"
-            alt=""
-            className="w-full h-full object-cover object-center"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-zinc-950/90 via-zinc-950/70 to-zinc-950/30" />
-          <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/60 via-transparent to-transparent" />
-        </div>
-
-        <div className="relative max-w-7xl mx-auto px-6 lg:px-12 w-full py-32">
-          <div className="max-w-2xl animate-fade-up">
-            {/* Eyebrow */}
-            <div className="flex items-center gap-2 mb-6">
-              <span className="flex h-2 w-2 relative">
-                <span className="animate-ping-slow absolute inline-flex h-full w-full rounded-full bg-violet-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-violet-400" />
-              </span>
-              <span className="text-zinc-300 text-sm font-medium tracking-wide">Join thousands of successful students</span>
+    <div className="min-h-screen" style={{ background: 'var(--bg-page)' }}>
+      {/* ── Header ── */}
+      <header className="fixed top-0 inset-x-0 z-50 px-6 py-4 transition-all duration-300" style={{ background: 'var(--bg-card)', borderBottom: '1px solid var(--border)' }}>
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl flex items-center justify-center bg-gradient-to-r from-violet-600 to-indigo-600">
+              <BookOpen className="w-5 h-5 text-white" />
             </div>
-
-            {/* Headline */}
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black text-white leading-[1.0] tracking-tight mb-6">
-              Learn from the
-              <br />
-              <span className="text-violet-400">best educators</span>
-              <br />
-              in the world.
-            </h1>
-
-            {/* Subheading */}
-            <p className="text-lg text-zinc-300 mb-10 leading-relaxed max-w-xl animate-fade-up" style={{ animationDelay: '0.1s' }}>
-              AI-Mentor connects you with expert instructors for personalized learning, progress tracking, and real skill breakthroughs.
-            </p>
-
-            {/* CTAs */}
-            <div className="flex flex-col sm:flex-row gap-3 animate-fade-up" style={{ animationDelay: '0.2s' }}>
-              <Link
-                to="/register"
-                className="group inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-violet-600 hover:bg-violet-500 text-white font-semibold rounded-lg transition-all duration-200 text-sm"
-              >
-                Start learning free
-                <ArrowRight size={16} className="group-hover:translate-x-0.5 transition-transform duration-200" />
-              </Link>
-              <Link
-                to="/login"
-                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-lg border border-white/20 transition-all duration-200 text-sm backdrop-blur-sm"
-              >
-                Sign in
-              </Link>
-            </div>
-
-            {/* Social proof */}
-            <div className="flex items-center gap-4 mt-10 animate-fade-up" style={{ animationDelay: '0.3s' }}>
-              <div className="flex -space-x-2">
-                {[11, 12, 13, 14, 15].map((i) => (
-                  <img key={i} src={`https://i.pravatar.cc/40?img=${i}`} className="w-8 h-8 rounded-full border-2 border-zinc-800" alt="" />
-                ))}
-              </div>
-              <div>
-                <div className="flex gap-0.5 mb-0.5">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} size={11} className="text-amber-400 fill-amber-400" />
-                  ))}
-                </div>
-                <p className="text-xs text-zinc-400">
-                  <span className="text-white font-semibold">4.9/5</span> from 2,400+ reviews
-                </p>
-              </div>
-            </div>
+            <span className="font-bold text-xl tracking-tight" style={{ color: 'var(--ink)' }}>Luma</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <ThemeToggle compact />
+            <Link to="/login" className="text-sm font-semibold hover:underline" style={{ color: 'var(--ink)' }}>Log in</Link>
+            <Link to="/register" className="btn-gradient px-5 py-2 text-sm rounded-full hidden sm:flex">
+              Sign Up
+            </Link>
           </div>
         </div>
-      </section>
+      </header>
 
-      {/* ── Trusted Section ── */}
-      <section className="py-14 border-y border-zinc-200 bg-zinc-50">
-        <div className="max-w-6xl mx-auto px-6">
-          <p className="text-center text-xs font-semibold text-zinc-500 uppercase tracking-widest mb-8">
-            Trusted by leading educational institutions
+      {/* ── Hero Section ── */}
+      <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <div className="absolute inset-0 bg-gradient-to-br from-violet-600/5 to-transparent dark:from-violet-600/10" />
+          <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-violet-600/20 blur-[120px] rounded-full pointer-events-none" />
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-6 text-center">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border mb-8 animate-fade-up"
+            style={{ background: 'var(--bg-card)', borderColor: 'var(--border)' }}>
+            <span className="flex h-2 w-2 relative">
+              <span className="animate-ping-slow absolute inline-flex h-full w-full rounded-full bg-violet-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-violet-500" />
+            </span>
+            <span className="text-xs font-semibold tracking-wide uppercase" style={{ color: 'var(--ink-3)' }}>Luma Platform 2.0</span>
+          </div>
+
+          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black leading-[1.1] tracking-tight mb-8 animate-fade-up" style={{ animationDelay: '0.1s', color: 'var(--ink)' }}>
+            The intelligent way<br className="hidden sm:block" />
+            to <span style={{ color: 'var(--blue)' }}>learn & teach.</span>
+          </h1>
+
+          <p className="text-lg max-w-2xl mx-auto mb-10 leading-relaxed animate-fade-up" style={{ animationDelay: '0.2s', color: 'var(--ink-3)' }}>
+            Luma brings AI-powered mentoring, seamless class management, and real-time analytics into a single, beautifully designed platform.
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-4">
-            {['Harvard', 'Stanford', 'MIT', 'Oxford', 'Cambridge', 'Yale', 'Cornell', 'Columbia'].map((c) => (
-              <span key={c} className="text-sm font-semibold text-zinc-400 hover:text-zinc-600 transition-colors duration-200">
-                {c}
-              </span>
-            ))}
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-up" style={{ animationDelay: '0.3s' }}>
+            <Link to="/register" className="btn-gradient px-8 py-4 text-base font-bold rounded-xl flex items-center justify-center gap-2 group">
+              Get Started for Free
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </Link>
+            <Link to="/login" className="btn-secondary px-8 py-4 text-base font-bold rounded-xl flex items-center justify-center">
+              View Demo
+            </Link>
           </div>
         </div>
       </section>
 
       {/* ── Stats Section ── */}
-      <section className="py-20 px-6 bg-white">
-        <div className="max-w-5xl mx-auto">
+      <section className="py-20" style={{ background: 'var(--bg-subtle)' }}>
+        <div className="max-w-5xl mx-auto px-6">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
             {stats.map((s, i) => (
               <ScrollReveal key={s.label} delay={i * 100}>
                 <div className="text-center lg:text-left">
-                  <p className="text-4xl font-black text-zinc-900 tabular-nums mb-1">
+                  <p className="text-4xl font-black tabular-nums mb-1" style={{ color: 'var(--ink)' }}>
                     <AnimatedCounter target={s.value} suffix={s.suffix} />
                   </p>
-                  <p className="text-sm font-semibold text-zinc-900">{s.label}</p>
-                  <p className="text-xs text-zinc-500 mt-0.5">{s.sublabel}</p>
+                  <p className="text-sm font-semibold" style={{ color: 'var(--ink)' }}>{s.label}</p>
+                  <p className="text-xs mt-0.5" style={{ color: 'var(--ink-4)' }}>{s.sublabel}</p>
                 </div>
               </ScrollReveal>
             ))}
@@ -201,105 +153,26 @@ export default function Landing() {
       </section>
 
       {/* ── Features Section ── */}
-      <section className="py-24 px-6 bg-zinc-50">
+      <section className="py-24 px-6">
         <div className="max-w-6xl mx-auto">
-          <div className="mb-16">
+          <div className="mb-16 text-center">
             <ScrollReveal>
-              <div>
-                <p className="text-sm font-semibold text-violet-600 uppercase tracking-widest mb-3">Platform</p>
-                <h2 className="text-4xl sm:text-5xl font-black text-zinc-900 leading-tight max-w-xl">
-                  Everything you need to succeed
-                </h2>
-              </div>
+              <h2 className="text-4xl sm:text-5xl font-black leading-tight mb-4" style={{ color: 'var(--ink)' }}>
+                Everything you need
+              </h2>
+              <p className="max-w-xl mx-auto" style={{ color: 'var(--ink-4)' }}>A comprehensive suite of tools built for modern education.</p>
             </ScrollReveal>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((f, i) => (
               <ScrollReveal key={f.title} delay={i * 80}>
-                <div className="group bg-white p-8 rounded-2xl border border-zinc-200 hover:border-violet-300 hover:shadow-lg transition-all duration-200">
-                  <div className="w-10 h-10 rounded-xl bg-violet-50 flex items-center justify-center mb-5">
-                    <f.icon size={20} className="text-violet-600" />
+                <div className="card-glass p-8 hover:-translate-y-1 transition-transform duration-300">
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-6" style={{ background: 'var(--blue-light)' }}>
+                    <f.icon className="w-6 h-6" style={{ color: 'var(--blue)' }} />
                   </div>
-                  <h3 className="font-bold text-zinc-900 mb-2 text-base">{f.title}</h3>
-                  <p className="text-sm text-zinc-600 leading-relaxed">{f.desc}</p>
-                </div>
-              </ScrollReveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── How It Works Section ── */}
-      <section className="relative py-24 px-6 overflow-hidden bg-zinc-950">
-        {/* Subtle texture */}
-        <div
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage:
-              "url(\"data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='1' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E\")",
-          }}
-        />
-
-        <div className="relative max-w-5xl mx-auto">
-          <div className="mb-16">
-            <ScrollReveal>
-              <div>
-                <p className="text-sm font-semibold text-violet-400 uppercase tracking-widest mb-3">Process</p>
-                <h2 className="text-4xl sm:text-5xl font-black text-white leading-tight">
-                  Start in four steps
-                </h2>
-                <p className="text-zinc-400 mt-4 max-w-lg">Get started in less than five minutes and begin your learning journey today.</p>
-              </div>
-            </ScrollReveal>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {steps.map((s, i) => (
-              <ScrollReveal key={s.num} delay={i * 100}>
-                <div className="group">
-                  <div className="text-5xl font-black text-zinc-800 mb-5 tabular-nums">{s.num}</div>
-                  <h3 className="font-bold text-white mb-2 text-base">{s.title}</h3>
-                  <p className="text-sm text-zinc-400 leading-relaxed">{s.desc}</p>
-                </div>
-              </ScrollReveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Testimonials Section ── */}
-      <section className="py-24 px-6 bg-zinc-50">
-        <div className="max-w-6xl mx-auto">
-          <div className="mb-12">
-            <ScrollReveal>
-              <div>
-                <p className="text-sm font-semibold text-violet-600 uppercase tracking-widest mb-3">Testimonials</p>
-                <h2 className="text-4xl sm:text-5xl font-black text-zinc-900 leading-tight">
-                  Real success stories
-                </h2>
-              </div>
-            </ScrollReveal>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {testimonials.map((t, i) => (
-              <ScrollReveal key={t.id} delay={i * 100}>
-                <div className="bg-white rounded-2xl p-7 border border-zinc-200 hover:shadow-lg hover:border-violet-200 transition-all duration-200">
-                  <div className="flex gap-0.5 mb-5">
-                    {[...Array(t.rating)].map((_, j) => (
-                      <Star key={j} size={14} className="text-amber-400 fill-amber-400" />
-                    ))}
-                  </div>
-                  <p className="text-zinc-700 leading-relaxed mb-6 text-[15px]">"{t.text}"</p>
-                  <div className="flex items-center gap-3 pt-5 border-t border-zinc-200">
-                    <img src={t.avatar} alt={t.studentName} className="w-10 h-10 rounded-full bg-zinc-200" />
-                    <div>
-                      <p className="font-semibold text-sm text-zinc-900">{t.studentName}</p>
-                      <p className="text-xs text-violet-600 font-medium">{t.role}</p>
-                      <p className="text-xs text-zinc-500">Mentored by {t.mentorName}</p>
-                    </div>
-                  </div>
+                  <h3 className="font-bold mb-3 text-lg" style={{ color: 'var(--ink)' }}>{f.title}</h3>
+                  <p className="text-sm leading-relaxed" style={{ color: 'var(--ink-3)' }}>{f.desc}</p>
                 </div>
               </ScrollReveal>
             ))}
@@ -308,44 +181,31 @@ export default function Landing() {
       </section>
 
       {/* ── Final CTA Section ── */}
-      <section className="relative py-32 px-6 overflow-hidden">
-        <div className="absolute inset-0">
-          <img
-            src="https://images.unsplash.com/photo-1531482615713-2afd69097998?w=1600&q=80&auto=format&fit=crop"
-            alt=""
-            className="w-full h-full object-cover object-center"
-          />
-          <div className="absolute inset-0 bg-zinc-950/80" />
-        </div>
-
+      <section className="py-32 px-6" style={{ background: 'var(--bg-section)' }}>
         <ScrollReveal>
-          <div className="relative max-w-2xl mx-auto text-center text-white">
-            <p className="text-sm font-semibold text-violet-400 uppercase tracking-widest mb-4">Get started</p>
-            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black mb-6 leading-tight">
-              Ready to learn from<br />
-              the best?
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black mb-8 leading-tight" style={{ color: 'var(--ink)' }}>
+              Ready to transform<br />education?
             </h2>
-            <p className="text-zinc-300 mb-10 text-lg leading-relaxed">
-              Start your learning journey today. No credit card required — create your account and explore our courses.
-            </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                to="/register"
-                className="group inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-violet-600 hover:bg-violet-500 text-white font-semibold rounded-lg transition-all duration-200"
-              >
-                Get started free
-                <ArrowRight size={16} className="group-hover:translate-x-0.5 transition-transform duration-200" />
-              </Link>
-              <Link
-                to="/login"
-                className="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-lg border border-white/20 transition-all duration-200 backdrop-blur-sm"
-              >
-                Already have an account? Sign in
+              <Link to="/register" className="btn-gradient px-8 py-4 font-bold text-lg rounded-xl">
+                Create an account
               </Link>
             </div>
           </div>
         </ScrollReveal>
       </section>
+
+      {/* ── Footer ── */}
+      <footer className="py-12 px-6" style={{ borderTop: '1px solid var(--border)', background: 'var(--bg-card)' }}>
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <BookOpen className="w-5 h-5" style={{ color: 'var(--ink-3)' }} />
+            <span className="font-bold" style={{ color: 'var(--ink)' }}>Luma</span>
+          </div>
+          <p className="text-sm" style={{ color: 'var(--ink-4)' }}>© 2024 Luma Education. All rights reserved.</p>
+        </div>
+      </footer>
     </div>
   );
 }

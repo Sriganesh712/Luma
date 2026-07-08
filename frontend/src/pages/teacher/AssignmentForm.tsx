@@ -151,12 +151,12 @@ export default function AssignmentForm() {
   const totalPoints = questions.reduce((s, q) => s + q.points, 0);
 
   return (
-    <div className="min-h-screen bg-slate-950 p-6">
+    <div className="min-h-screen  p-6">
       <div className="max-w-3xl mx-auto">
         <div className="flex items-center gap-3 mb-6">
-          <Link to={classId ? `/teacher/classes/${classId}` : '/teacher'} className="text-slate-400 hover:text-white transition"><ArrowLeft className="w-5 h-5" /></Link>
-          <h1 className="text-white text-xl font-bold">New Assignment</h1>
-          <span className="ml-auto text-slate-400 text-sm">{totalPoints} pts total</span>
+          <Link to={classId ? `/teacher/classes/${classId}` : '/teacher'} className=" hover: transition"><ArrowLeft className="w-5 h-5" /></Link>
+          <h1 className=" text-xl font-bold">New Assignment</h1>
+          <span className="ml-auto  text-sm">{totalPoints} pts total</span>
         </div>
         <Breadcrumb items={[
           { label: 'Dashboard', to: '/teacher' },
@@ -166,54 +166,54 @@ export default function AssignmentForm() {
 
         <form onSubmit={e => handleSubmit(e, false)} className="space-y-6">
           {/* Basic info */}
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4">
+          <div className="card-glass rounded-2xl p-5 space-y-4">
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1.5">Title *</label>
+              <label className="block text-sm font-medium  mb-1.5">Title *</label>
               <input value={title} onChange={e => setTitle(e.target.value)} required placeholder="e.g. Chapter 5 Quiz"
-                className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition" />
+                className="w-full px-4 py-2.5 form-input rounded-xl   focus:outline-none focus:border-indigo-500 transition" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1.5">Description</label>
+              <label className="block text-sm font-medium  mb-1.5">Description</label>
               <textarea value={description} onChange={e => setDescription(e.target.value)} rows={2} placeholder="Instructions or overview..."
-                className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition resize-none" />
+                className="w-full px-4 py-2.5 form-input rounded-xl   focus:outline-none focus:border-indigo-500 transition resize-none" />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-1.5">Type</label>
+                <label className="block text-sm font-medium  mb-1.5">Type</label>
                 <select value={assignmentType} onChange={e => setAssignmentType(e.target.value as any)}
-                  className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-indigo-500 transition">
+                  className="w-full px-4 py-2.5 form-input rounded-xl  focus:outline-none focus:border-indigo-500 transition">
                   <option value="mcq">MCQ</option>
                   <option value="written">Written</option>
                   <option value="mixed">Mixed</option>
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-1.5">Deadline</label>
+                <label className="block text-sm font-medium  mb-1.5">Deadline</label>
                 <input type="datetime-local" value={deadline} onChange={e => setDeadline(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-indigo-500 transition" />
+                  className="w-full px-4 py-2.5 form-input rounded-xl  focus:outline-none focus:border-indigo-500 transition" />
               </div>
             </div>
           </div>
 
           {/* Target */}
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5">
-            <h3 className="text-white font-semibold mb-3">Assign To</h3>
+          <div className="card-glass rounded-2xl p-5">
+            <h3 className=" font-semibold mb-3">Assign To</h3>
             <div className="flex gap-2 mb-3">
               {(['class', 'student'] as const).map(t => (
                 <button key={t} type="button" onClick={() => setTargetType(t)}
-                  className={`px-4 py-2 rounded-xl text-sm font-medium transition capitalize ${targetType === t ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-slate-400 hover:text-white'}`}>
+                  className={`px-4 py-2 rounded-xl text-sm font-medium transition capitalize ${targetType === t ? 'bg-indigo-600 ' : '  hover:'}`}>
                   {t === 'class' ? 'Entire Class' : 'Specific Students'}
                 </button>
               ))}
             </div>
             {targetType === 'student' && (
-              <div className="max-h-40 overflow-y-auto border border-slate-700 rounded-xl divide-y divide-slate-700">
+              <div className="max-h-40 overflow-y-auto border  rounded-xl divide-y divide-slate-700">
                 {students.map(s => (
-                  <label key={s.id} className="flex items-center gap-3 px-4 py-2 hover:bg-slate-800/50 cursor-pointer">
+                  <label key={s.id} className="flex items-center gap-3 px-4 py-2 hover:/50 cursor-pointer">
                     <input type="checkbox" checked={targetIds.includes(s.id)}
                       onChange={e => setTargetIds(prev => e.target.checked ? [...prev, s.id] : prev.filter(id => id !== s.id))}
                       className="rounded border-slate-600 text-indigo-600" />
-                    <span className="text-white text-sm">{s.name}</span>
+                    <span className=" text-sm">{s.name}</span>
                   </label>
                 ))}
               </div>
@@ -225,32 +225,32 @@ export default function AssignmentForm() {
             {/* AI Generator Panel */}
             <div className="bg-slate-900 border border-indigo-500/30 rounded-2xl overflow-hidden">
               <button type="button" onClick={() => setAiPanelOpen(o => !o)}
-                className="w-full flex items-center justify-between px-5 py-4 hover:bg-slate-800/50 transition">
+                className="w-full flex items-center justify-between px-5 py-4 hover:/50 transition">
                 <div className="flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-indigo-400" />
-                  <span className="text-white text-sm font-semibold">Generate Questions with AI</span>
-                  <span className="text-slate-500 text-xs">— describe a topic and let AI create questions</span>
+                  <Sparkles className="w-4 h-4 " />
+                  <span className=" text-sm font-semibold">Generate Questions with AI</span>
+                  <span className=" text-xs">— describe a topic and let AI create questions</span>
                 </div>
-                {aiPanelOpen ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
+                {aiPanelOpen ? <ChevronUp className="w-4 h-4 " /> : <ChevronDown className="w-4 h-4 " />}
               </button>
               {aiPanelOpen && (
                 <div className="px-5 pb-5 border-t border-slate-800 pt-4 space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-1.5">Topic / Prompt *</label>
+                    <label className="block text-sm font-medium  mb-1.5">Topic / Prompt *</label>
                     <input value={aiTopic} onChange={e => setAiTopic(e.target.value)}
                       placeholder="e.g. Newton's Laws of Motion, Chapter 5 photosynthesis..."
-                      className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition" />
+                      className="w-full px-4 py-2.5 form-input rounded-xl   focus:outline-none focus:border-indigo-500 transition" />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-slate-300 mb-1.5">Number of Questions</label>
+                      <label className="block text-sm font-medium  mb-1.5">Number of Questions</label>
                       <input type="number" min={1} max={15} value={aiNumQ} onChange={e => setAiNumQ(+e.target.value)}
-                        className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-indigo-500 transition" />
+                        className="w-full px-4 py-2.5 form-input rounded-xl  focus:outline-none focus:border-indigo-500 transition" />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-slate-300 mb-1.5">Difficulty</label>
+                      <label className="block text-sm font-medium  mb-1.5">Difficulty</label>
                       <select value={aiDifficulty} onChange={e => setAiDifficulty(e.target.value as any)}
-                        className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-indigo-500 transition">
+                        className="w-full px-4 py-2.5 form-input rounded-xl  focus:outline-none focus:border-indigo-500 transition">
                         <option value="easy">Easy</option>
                         <option value="medium">Medium</option>
                         <option value="hard">Hard</option>
@@ -258,28 +258,28 @@ export default function AssignmentForm() {
                     </div>
                   </div>
                   <button type="button" onClick={generateWithAI} disabled={aiGenerating}
-                    className="flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-sm font-semibold rounded-xl transition">
+                    className="flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50  text-sm font-semibold rounded-xl transition">
                     {aiGenerating ? <><Loader2 className="w-4 h-4 animate-spin" /> Generating...</> : <><Sparkles className="w-4 h-4" /> Generate</>}
                   </button>
                 </div>
               )}
             </div>
             {questions.map((q, qi) => (
-              <div key={qi} className="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+              <div key={qi} className="card-glass rounded-2xl p-5">
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-slate-400 text-sm font-medium">Question {qi + 1}</span>
+                  <span className=" text-sm font-medium">Question {qi + 1}</span>
                   <div className="flex items-center gap-3">
                     {assignmentType === 'mixed' && (
                       <select value={q.type} onChange={e => updateQuestion(qi, { type: e.target.value as any })}
-                        className="px-3 py-1 bg-slate-800 border border-slate-700 rounded-lg text-white text-xs focus:outline-none">
+                        className="px-3 py-1 form-input rounded-lg  text-xs focus:outline-none">
                         <option value="mcq">MCQ</option><option value="written">Written</option>
                       </select>
                     )}
                     <input type="number" value={q.points} onChange={e => updateQuestion(qi, { points: +e.target.value })}
-                      min={1} className="w-16 px-2 py-1 bg-slate-800 border border-slate-700 rounded-lg text-white text-xs focus:outline-none text-center" />
-                    <span className="text-slate-500 text-xs">pts</span>
+                      min={1} className="w-16 px-2 py-1 form-input rounded-lg  text-xs focus:outline-none text-center" />
+                    <span className=" text-xs">pts</span>
                     {questions.length > 1 && (
-                      <button type="button" onClick={() => removeQuestion(qi)} className="text-slate-500 hover:text-red-400 transition">
+                      <button type="button" onClick={() => removeQuestion(qi)} className=" hover:text-red-400 transition">
                         <Trash2 className="w-4 h-4" />
                       </button>
                     )}
@@ -288,28 +288,28 @@ export default function AssignmentForm() {
 
                 <textarea value={q.question_text} onChange={e => updateQuestion(qi, { question_text: e.target.value })}
                   rows={2} placeholder="Enter question text..." required
-                  className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition resize-none mb-3" />
+                  className="w-full px-4 py-2.5 form-input rounded-xl   focus:outline-none focus:border-indigo-500 transition resize-none mb-3" />
 
                 {q.type === 'mcq' && (
                   <div className="space-y-2">
                     {q.options.map((opt, oi) => (
                       <div key={opt.label} className="flex items-center gap-2">
                         <button type="button" onClick={() => updateQuestion(qi, { correct_answer: opt.label })}
-                          className={`w-7 h-7 rounded-full border-2 text-xs font-bold flex items-center justify-center shrink-0 transition ${q.correct_answer === opt.label ? 'border-green-500 bg-green-500 text-white' : 'border-slate-600 text-slate-400 hover:border-slate-500'}`}>
+                          className={`w-7 h-7 rounded-full border-2 text-xs font-bold flex items-center justify-center shrink-0 transition ${q.correct_answer === opt.label ? 'border-green-500 bg-green-500 ' : 'border-slate-600  hover:border-slate-500'}`}>
                           {opt.label}
                         </button>
                         <input value={opt.text} onChange={e => updateOption(qi, oi, e.target.value)} placeholder={`Option ${opt.label}`}
-                          className="flex-1 px-3 py-1.5 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 text-sm focus:outline-none focus:border-indigo-500 transition" />
+                          className="flex-1 px-3 py-1.5 form-input rounded-lg   text-sm focus:outline-none focus:border-indigo-500 transition" />
                       </div>
                     ))}
-                    <p className="text-slate-500 text-xs mt-1">Click a letter to mark it as the correct answer.</p>
+                    <p className=" text-xs mt-1">Click a letter to mark it as the correct answer.</p>
                   </div>
                 )}
               </div>
             ))}
 
             <button type="button" onClick={addQuestion}
-              className="w-full py-3 border-2 border-dashed border-slate-700 hover:border-slate-600 rounded-2xl text-slate-400 hover:text-white text-sm font-medium flex items-center justify-center gap-2 transition">
+              className="w-full py-3 border-2 border-dashed  hover:border-slate-600 rounded-2xl  hover: text-sm font-medium flex items-center justify-center gap-2 transition">
               <Plus className="w-4 h-4" /> Add Question
             </button>
           </div>
@@ -317,11 +317,11 @@ export default function AssignmentForm() {
           {/* Actions */}
           <div className="flex gap-3">
             <button type="submit" disabled={saving}
-              className="flex-1 py-2.5 bg-slate-800 hover:bg-slate-700 disabled:opacity-50 text-white font-semibold rounded-xl transition flex items-center justify-center gap-2">
+              className="flex-1 py-2.5  hover:bg-slate-700 disabled:opacity-50  font-semibold rounded-xl transition flex items-center justify-center gap-2">
               {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Save as Draft'}
             </button>
             <button type="button" onClick={e => handleSubmit(e as any, true)} disabled={saving}
-              className="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white font-semibold rounded-xl transition flex items-center justify-center gap-2">
+              className="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50  font-semibold rounded-xl transition flex items-center justify-center gap-2">
               {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Publish Now'}
             </button>
           </div>

@@ -65,7 +65,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       .eq('id', userId)
       .single();
 
-    if (!error && data) setProfile(data as UserProfile);
+    if (!error && data) {
+      setProfile(data as UserProfile);
+      if (data.theme) {
+        window.dispatchEvent(new CustomEvent('luma-theme-sync', { detail: data.theme }));
+      }
+    }
     setLoading(false);
   }
 

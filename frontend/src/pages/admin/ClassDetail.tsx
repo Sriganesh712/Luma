@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
-import { ArrowLeft, Users, UserPlus, Trash2, Loader2, GraduationCap, Pencil } from 'lucide-react';
+import { Users, UserPlus, Trash2, Loader2, GraduationCap, Pencil, School, Settings, BarChart2 } from 'lucide-react';
+import DashboardLayout from '../../components/layout/DashboardLayout';
 import toast from 'react-hot-toast';
 
 interface ClassData { id: string; name: string; subject: string | null; teacher_id: string | null; }
@@ -71,110 +72,110 @@ export default function AdminClassDetail() {
     loadAll();
   }
 
-  if (loading) return <div className="min-h-screen bg-slate-950 flex items-center justify-center text-slate-400">Loading...</div>;
+  const navItems = [
+    { icon: BarChart2,     label: 'Overview',  to: '/admin' },
+    { icon: School,        label: 'Classes',   to: '/admin/classes' },
+    { icon: Users,         label: 'Teachers',  to: '/admin/teachers' },
+    { icon: GraduationCap, label: 'Students',  to: '/admin/students' },
+    { icon: Settings,      label: 'Settings',  to: '/admin/settings' },
+  ];
 
   const teacher = allTeachers.find(t => t.id === cls?.teacher_id);
 
   return (
-    <div className="min-h-screen bg-slate-950 p-6">
-      <div className="max-w-3xl mx-auto space-y-6">
-        <div className="flex items-center gap-3">
-          <Link to="/admin/classes" className="text-slate-400 hover:text-white transition"><ArrowLeft className="w-5 h-5" /></Link>
-          <div>
-            <h1 className="text-white text-xl font-bold">{cls?.name}</h1>
-            {cls?.subject && <p className="text-slate-400 text-sm">{cls.subject}</p>}
-          </div>
-        </div>
-
-        {/* Teacher assignment */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-white font-semibold flex items-center gap-2"><Users className="w-4 h-4 text-indigo-400" /> Class Teacher</h2>
-            <button onClick={() => setEditTeacher(!editTeacher)} className="text-indigo-400 hover:text-indigo-300 text-sm flex items-center gap-1 transition">
-              <Pencil className="w-3.5 h-3.5" /> {editTeacher ? 'Cancel' : 'Change'}
-            </button>
-          </div>
-          {editTeacher ? (
-            <div className="flex gap-3">
-              <select value={selectedTeacher} onChange={e => setSelectedTeacher(e.target.value)}
-                className="flex-1 px-3 py-2 bg-slate-800 border border-slate-700 rounded-xl text-white text-sm focus:outline-none focus:border-indigo-500">
-                <option value="">— No teacher —</option>
-                {allTeachers.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
-              </select>
-              <button onClick={saveTeacher} disabled={saving}
-                className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-sm rounded-xl transition flex items-center gap-2">
-                {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Save'}
+    <DashboardLayout navItems={navItems} role="admin" pageTitle={cls?.name ?? 'Class Detail'} pageSubtitle={cls?.subject ?? undefined}>
+      {loading ? (
+        <div className="py-20 text-center text-sm" style={{ color: 'var(--ink-4)' }}>Loading...</div>
+      ) : (
+        <div className="max-w-3xl space-y-6">
+          {/* Teacher assignment */}
+          <div className="card-glass p-5">
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="font-semibold flex items-center gap-2" style={{ color: 'var(--ink)' }}><Users className="w-4 h-4" style={{ color: 'var(--blue)' }} /> Class Teacher</h2>
+              <button onClick={() => setEditTeacher(!editTeacher)} className="text-sm flex items-center gap-1 transition" style={{ color: 'var(--blue)' }}>
+                <Pencil className="w-3.5 h-3.5" /> {editTeacher ? 'Cancel' : 'Change'}
               </button>
             </div>
-          ) : (
-            <div className="text-sm">
-              {teacher ? (
-                <div>
-                  <div className="text-white font-medium">{teacher.name}</div>
-                  <div className="text-slate-400">{teacher.email}</div>
-                </div>
-              ) : <span className="text-amber-500">No teacher assigned yet.</span>}
-            </div>
-          )}
-        </div>
+            {editTeacher ? (
+              <div className="flex gap-3">
+                <select value={selectedTeacher} onChange={e => setSelectedTeacher(e.target.value)} className="form-input flex-1">
+                  <option value="">— No teacher —</option>
+                  {allTeachers.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
+                </select>
+                <button onClick={saveTeacher} disabled={saving} className="btn-gradient px-4 py-2 text-sm flex items-center gap-2">
+                  {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Save'}
+                </button>
+              </div>
+            ) : (
+              <div className="text-sm">
+                {teacher ? (
+                  <div>
+                    <div className="font-medium" style={{ color: 'var(--ink)' }}>{teacher.name}</div>
+                    <div style={{ color: 'var(--ink-4)' }}>{teacher.email}</div>
+                  </div>
+                ) : <span className="text-amber-500">No teacher assigned yet.</span>}
+              </div>
+            )}
+          </div>
 
-        {/* Enroll students */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5">
-          <h2 className="text-white font-semibold flex items-center gap-2 mb-4"><UserPlus className="w-4 h-4 text-green-400" /> Add Students</h2>
-          {allStudents.length === 0 ? (
-            <p className="text-slate-400 text-sm">All registered students are already enrolled.</p>
-          ) : (
-            <div className="space-y-3">
-              <div className="max-h-48 overflow-y-auto border border-slate-700 rounded-xl divide-y divide-slate-700">
-                {allStudents.map(s => (
-                  <label key={s.id} className="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-800/50 cursor-pointer">
-                    <input type="checkbox" checked={enrollIds.includes(s.id)}
-                      onChange={e => setEnrollIds(prev => e.target.checked ? [...prev, s.id] : prev.filter(id => id !== s.id))}
-                      className="rounded border-slate-600 text-indigo-600" />
+          {/* Enroll students */}
+          <div className="card-glass p-5">
+            <h2 className="font-semibold flex items-center gap-2 mb-4" style={{ color: 'var(--ink)' }}><UserPlus className="w-4 h-4 text-green-500" /> Add Students</h2>
+            {allStudents.length === 0 ? (
+              <p className="text-sm" style={{ color: 'var(--ink-4)' }}>All registered students are already enrolled.</p>
+            ) : (
+              <div className="space-y-3">
+                <div className="max-h-48 overflow-y-auto rounded-xl divide-y" style={{ border: '1px solid var(--border)', borderColor: 'var(--border)' }}>
+                  {allStudents.map(s => (
+                    <label key={s.id} className="flex items-center gap-3 px-4 py-2.5 cursor-pointer transition hover:bg-violet-50/50 dark:hover:bg-violet-900/10" style={{ borderColor: 'var(--border)' }}>
+                      <input type="checkbox" checked={enrollIds.includes(s.id)}
+                        onChange={e => setEnrollIds(prev => e.target.checked ? [...prev, s.id] : prev.filter(id => id !== s.id))}
+                        className="rounded" />
+                      <div>
+                        <div className="text-sm" style={{ color: 'var(--ink)' }}>{s.name}</div>
+                        <div className="text-xs" style={{ color: 'var(--ink-4)' }}>{s.email}</div>
+                      </div>
+                    </label>
+                  ))}
+                </div>
+                <button onClick={enrollStudents} disabled={enrollIds.length === 0 || saving}
+                  className="px-4 py-2 bg-green-600 hover:bg-green-500 disabled:opacity-50 text-white text-sm font-medium rounded-xl transition flex items-center gap-2">
+                  {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <UserPlus className="w-4 h-4" />}
+                  Enroll {enrollIds.length > 0 ? enrollIds.length : ''} Student{enrollIds.length !== 1 ? 's' : ''}
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Enrolled students list */}
+          <div className="card-glass overflow-hidden">
+            <div className="flex items-center justify-between px-6 py-4" style={{ borderBottom: '1px solid var(--border)' }}>
+              <h2 className="font-semibold flex items-center gap-2" style={{ color: 'var(--ink)' }}>
+                <GraduationCap className="w-4 h-4" style={{ color: 'var(--blue)' }} /> Enrolled Students
+                <span style={{ color: 'var(--ink-4)' }} className="font-normal">({students.length})</span>
+              </h2>
+            </div>
+            {students.length === 0 ? (
+              <div className="py-10 text-center text-sm" style={{ color: 'var(--ink-4)' }}>No students enrolled yet.</div>
+            ) : (
+              <div className="divide-y" style={{ borderColor: 'var(--border)' }}>
+                {students.map(s => (
+                  <div key={s.id} className="flex items-center justify-between px-6 py-3">
                     <div>
-                      <div className="text-white text-sm">{s.name}</div>
-                      <div className="text-slate-400 text-xs">{s.email}</div>
+                      <div className="text-sm font-medium" style={{ color: 'var(--ink)' }}>{s.name}</div>
+                      <div className="text-xs" style={{ color: 'var(--ink-4)' }}>{s.email}</div>
                     </div>
-                  </label>
+                    <button onClick={() => unenroll(s.id)}
+                      className="p-1.5 rounded-lg transition hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 dark:hover:text-red-400" style={{ color: 'var(--ink-4)' }}>
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
                 ))}
               </div>
-              <button onClick={enrollStudents} disabled={enrollIds.length === 0 || saving}
-                className="px-4 py-2 bg-green-600 hover:bg-green-500 disabled:opacity-50 text-white text-sm font-medium rounded-xl transition flex items-center gap-2">
-                {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <UserPlus className="w-4 h-4" />}
-                Enroll {enrollIds.length > 0 ? enrollIds.length : ''} Student{enrollIds.length !== 1 ? 's' : ''}
-              </button>
-            </div>
-          )}
-        </div>
-
-        {/* Enrolled students list */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
-          <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800">
-            <h2 className="text-white font-semibold flex items-center gap-2">
-              <GraduationCap className="w-4 h-4 text-blue-400" /> Enrolled Students
-              <span className="text-slate-400 font-normal">({students.length})</span>
-            </h2>
+            )}
           </div>
-          {students.length === 0 ? (
-            <div className="py-10 text-center text-slate-400 text-sm">No students enrolled yet.</div>
-          ) : (
-            <div className="divide-y divide-slate-800">
-              {students.map(s => (
-                <div key={s.id} className="flex items-center justify-between px-6 py-3">
-                  <div>
-                    <div className="text-white text-sm font-medium">{s.name}</div>
-                    <div className="text-slate-400 text-xs">{s.email}</div>
-                  </div>
-                  <button onClick={() => unenroll(s.id)}
-                    className="p-1.5 text-slate-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition">
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
         </div>
-      </div>
-    </div>
+      )}
+    </DashboardLayout>
   );
 }

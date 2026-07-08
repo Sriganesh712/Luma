@@ -131,49 +131,49 @@ export default function AdminDashboard() {
 
       {/* Institution code */}
       <div className="card-glass p-5 mb-6">
-        <p className="text-xs font-bold uppercase tracking-wider mb-2 text-zinc-500">Institution Code</p>
+        <p className="text-xs font-bold uppercase tracking-wider mb-2 ">Institution Code</p>
         <div className="flex items-center gap-3">
-          <code className="font-mono font-bold text-2xl tracking-widest text-violet-600">{institutionCode || '—'}</code>
-          <p className="text-xs ml-auto text-zinc-500">Share with teachers &amp; students to join</p>
+          <code className="font-mono font-bold text-2xl tracking-widest ">{institutionCode || '—'}</code>
+          <p className="text-xs ml-auto ">Share with teachers &amp; students to join</p>
         </div>
       </div>
 
       {/* Classes table */}
       <div className="card-glass overflow-hidden">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-300">
-          <h2 className="font-bold text-base text-zinc-950">Classes</h2>
-          <Link to="/admin/classes" className="text-sm font-semibold hover:underline transition text-violet-600">
+        <div className="flex items-center justify-between px-6 py-4 border-b ">
+          <h2 className="font-bold text-base ">Classes</h2>
+          <Link to="/admin/classes" className="text-sm font-semibold hover:underline transition ">
             View all →
           </Link>
         </div>
         {loading ? (
-          <div className="py-12 text-center text-sm text-zinc-500">Loading...</div>
+          <div className="py-12 text-center text-sm ">Loading...</div>
         ) : classes.length === 0 ? (
           <div className="py-12 text-center">
-            <School className="w-10 h-10 mx-auto mb-3 text-zinc-400" />
-            <p className="text-sm text-zinc-600">No classes yet.</p>
-            <Link to="/admin/classes/new" className="text-sm font-semibold mt-1 block hover:underline text-violet-600">
+            <School className="w-10 h-10 mx-auto mb-3 " />
+            <p className="text-sm ">No classes yet.</p>
+            <Link to="/admin/classes/new" className="text-sm font-semibold mt-1 block hover:underline ">
               Create your first class →
             </Link>
           </div>
         ) : (
-          <div className="divide-y border-zinc-300">
+          <div className="divide-y ">
             {classes.map(cls => (
               <Link key={cls.id} to={`/admin/classes/${cls.id}`}
-                className="flex items-center justify-between px-6 py-4 hover:bg-blue-50/50 transition group">
+                className="flex items-center justify-between px-6 py-4 hover:/50 dark:hover:bg-violet-900/10 transition group">
                 <div>
-                  <div className="font-semibold text-sm text-zinc-950">{cls.name}</div>
-                  <div className="text-xs mt-0.5 text-zinc-500">
+                  <div className="font-semibold text-sm ">{cls.name}</div>
+                  <div className="text-xs mt-0.5 ">
                     {cls.subject && `${cls.subject} · `}
                     {cls.teacher ? cls.teacher.name : <span className="text-amber-500">No teacher assigned</span>}
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
-                  <div className="text-sm flex items-center gap-1 text-zinc-500">
+                  <div className="text-sm flex items-center gap-1 ">
                     <GraduationCap className="w-4 h-4" />
                     {cls.studentCount}
                   </div>
-                  <ChevronRight className="w-4 h-4 transition text-zinc-400" />
+                  <ChevronRight className="w-4 h-4 transition " />
                 </div>
               </Link>
             ))}

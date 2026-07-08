@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
-import { ArrowLeft, Loader2 } from 'lucide-react';
+import { Loader2, School, Settings, BarChart2, Users, GraduationCap } from 'lucide-react';
+import DashboardLayout from '../../components/layout/DashboardLayout';
 import toast from 'react-hot-toast';
 
 interface Teacher { id: string; name: string; email: string; }
@@ -44,49 +45,49 @@ export default function ClassForm() {
     navigate(`/admin/classes/${data.id}`);
   }
 
-  return (
-    <div className="min-h-screen bg-slate-950 p-6">
-      <div className="max-w-lg mx-auto">
-        <div className="flex items-center gap-3 mb-6">
-          <Link to="/admin/classes" className="text-slate-400 hover:text-white transition"><ArrowLeft className="w-5 h-5" /></Link>
-          <h1 className="text-white text-xl font-bold">New Class</h1>
-        </div>
+  const navItems = [
+    { icon: BarChart2,     label: 'Overview',  to: '/admin' },
+    { icon: School,        label: 'Classes',   to: '/admin/classes' },
+    { icon: Users,         label: 'Teachers',  to: '/admin/teachers' },
+    { icon: GraduationCap, label: 'Students',  to: '/admin/students' },
+    { icon: Settings,      label: 'Settings',  to: '/admin/settings' },
+  ];
 
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+  return (
+    <DashboardLayout navItems={navItems} role="admin" pageTitle="New Class" pageSubtitle="Create a new class">
+      <div className="max-w-lg">
+        <div className="card-glass p-6">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1.5">Class Name *</label>
+              <label className="block text-sm font-medium mb-1.5" style={{ color: 'var(--ink-3)' }}>Class Name *</label>
               <input value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))} required
-                placeholder="e.g. Grade 10 - Mathematics"
-                className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition" />
+                placeholder="e.g. Grade 10 - Mathematics" className="form-input" />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1.5">Subject</label>
+              <label className="block text-sm font-medium mb-1.5" style={{ color: 'var(--ink-3)' }}>Subject</label>
               <input value={form.subject} onChange={e => setForm(p => ({ ...p, subject: e.target.value }))}
-                placeholder="e.g. Mathematics, Physics"
-                className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition" />
+                placeholder="e.g. Mathematics, Physics" className="form-input" />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1.5">Assign Teacher</label>
-              <select value={form.teacher_id} onChange={e => setForm(p => ({ ...p, teacher_id: e.target.value }))}
-                className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition">
+              <label className="block text-sm font-medium mb-1.5" style={{ color: 'var(--ink-3)' }}>Assign Teacher</label>
+              <select value={form.teacher_id} onChange={e => setForm(p => ({ ...p, teacher_id: e.target.value }))} className="form-input">
                 <option value="">— Select a teacher —</option>
                 {teachers.map(t => <option key={t.id} value={t.id}>{t.name} ({t.email})</option>)}
               </select>
               {teachers.length === 0 && (
-                <p className="text-slate-500 text-xs mt-1.5">No teachers yet. Add teachers first from the Users page.</p>
+                <p className="text-xs mt-1.5" style={{ color: 'var(--ink-4)' }}>No teachers yet. Add teachers first from the Users page.</p>
               )}
             </div>
 
             <button type="submit" disabled={loading}
-              className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white font-semibold rounded-xl transition flex items-center justify-center gap-2 mt-2">
+              className="btn-gradient w-full py-2.5 justify-center mt-2 flex items-center gap-2">
               {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Creating...</> : 'Create Class'}
             </button>
           </form>
         </div>
       </div>
-    </div>
+    </DashboardLayout>
   );
 }

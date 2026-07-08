@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
-import { School, Plus, ChevronRight, GraduationCap, Search, ArrowLeft } from 'lucide-react';
+import { School, Plus, ChevronRight, GraduationCap, Search, Settings, BarChart2, Users } from 'lucide-react';
+import DashboardLayout from '../../components/layout/DashboardLayout';
 
 interface ClassItem {
   id: string;
@@ -42,63 +43,73 @@ export default function AdminClasses() {
     (c.subject ?? '').toLowerCase().includes(search.toLowerCase())
   );
 
+  const navItems = [
+    { icon: BarChart2,     label: 'Overview',  to: '/admin' },
+    { icon: School,        label: 'Classes',   to: '/admin/classes' },
+    { icon: Users,         label: 'Teachers',  to: '/admin/teachers' },
+    { icon: GraduationCap, label: 'Students',  to: '/admin/students' },
+    { icon: Settings,      label: 'Settings',  to: '/admin/settings' },
+  ];
+
   return (
-    <div className="min-h-screen bg-slate-950 p-6">
-      <div className="max-w-4xl mx-auto">
-        <div className="flex items-center gap-4 mb-6">
-          <Link to="/admin" className="text-slate-400 hover:text-white transition"><ArrowLeft className="w-5 h-5" /></Link>
-          <h1 className="text-white text-xl font-bold">Classes</h1>
-          <Link to="/admin/classes/new" className="ml-auto flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium rounded-xl transition">
-            <Plus className="w-4 h-4" /> New Class
-          </Link>
-        </div>
-
-        <div className="relative mb-4">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
-          <input
-            value={search} onChange={e => setSearch(e.target.value)}
-            placeholder="Search classes..."
-            className="w-full pl-10 pr-4 py-2.5 bg-slate-900 border border-slate-800 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 text-sm"
-          />
-        </div>
-
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
-          {loading ? (
-            <div className="py-16 text-center text-slate-500">Loading...</div>
-          ) : filtered.length === 0 ? (
-            <div className="py-16 text-center">
-              <School className="w-10 h-10 text-slate-700 mx-auto mb-3" />
-              <p className="text-slate-400 text-sm">{search ? 'No classes match your search.' : 'No classes yet.'}</p>
-              {!search && (
-                <Link to="/admin/classes/new" className="text-indigo-400 hover:text-indigo-300 text-sm mt-1 block transition">
-                  Create your first class →
-                </Link>
-              )}
-            </div>
-          ) : (
-            <div className="divide-y divide-slate-800">
-              {filtered.map(cls => (
-                <Link key={cls.id} to={`/admin/classes/${cls.id}`}
-                  className="flex items-center justify-between px-6 py-4 hover:bg-slate-800/50 transition group">
-                  <div>
-                    <div className="text-white font-medium text-sm">{cls.name}</div>
-                    <div className="text-slate-400 text-xs mt-0.5">
-                      {cls.subject ? `${cls.subject} · ` : ''}
-                      {cls.teacher ? cls.teacher.name : <span className="text-amber-500">No teacher assigned</span>}
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <span className="text-slate-400 text-xs flex items-center gap-1">
-                      <GraduationCap className="w-3.5 h-3.5" /> {cls.studentCount}
-                    </span>
-                    <ChevronRight className="w-4 h-4 text-slate-600 group-hover:text-slate-400 transition" />
-                  </div>
-                </Link>
-              ))}
-            </div>
-          )}
-        </div>
+    <DashboardLayout
+      navItems={navItems}
+      role="admin"
+      pageTitle="Classes"
+      pageSubtitle={`${classes.length} total classes`}
+      headerActions={
+        <Link to="/admin/classes/new" className="btn-gradient flex items-center gap-2 text-sm">
+          <Plus className="w-4 h-4" /> New Class
+        </Link>
+      }
+    >
+      {/* Search */}
+      <div className="relative mb-6">
+        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: 'var(--ink-4)' }} />
+        <input
+          value={search} onChange={e => setSearch(e.target.value)}
+          placeholder="Search classes..."
+          className="form-input pl-10"
+        />
       </div>
-    </div>
+
+      {/* Classes list */}
+      <div className="card-glass overflow-hidden">
+        {loading ? (
+          <div className="py-16 text-center text-sm" style={{ color: 'var(--ink-4)' }}>Loading...</div>
+        ) : filtered.length === 0 ? (
+          <div className="py-16 text-center">
+            <School className="w-10 h-10 mx-auto mb-3" style={{ color: 'var(--ink-5)' }} />
+            <p className="text-sm" style={{ color: 'var(--ink-3)' }}>{search ? 'No classes match your search.' : 'No classes yet.'}</p>
+            {!search && (
+              <Link to="/admin/classes/new" className="text-sm font-semibold mt-1 block hover:underline" style={{ color: 'var(--blue)' }}>
+                Create your first class →
+              </Link>
+            )}
+          </div>
+        ) : (
+          <div className="divide-y" style={{ borderColor: 'var(--border)' }}>
+            {filtered.map(cls => (
+              <Link key={cls.id} to={`/admin/classes/${cls.id}`}
+                className="flex items-center justify-between px-6 py-4 transition group hover:bg-violet-50/50 dark:hover:bg-violet-900/10">
+                <div>
+                  <div className="font-medium text-sm" style={{ color: 'var(--ink)' }}>{cls.name}</div>
+                  <div className="text-xs mt-0.5" style={{ color: 'var(--ink-4)' }}>
+                    {cls.subject ? `${cls.subject} · ` : ''}
+                    {cls.teacher ? cls.teacher.name : <span className="text-amber-500">No teacher assigned</span>}
+                  </div>
+                </div>
+                <div className="flex items-center gap-4">
+                  <span className="text-xs flex items-center gap-1" style={{ color: 'var(--ink-4)' }}>
+                    <GraduationCap className="w-3.5 h-3.5" /> {cls.studentCount}
+                  </span>
+                  <ChevronRight className="w-4 h-4 transition" style={{ color: 'var(--ink-5)' }} />
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
+    </DashboardLayout>
   );
 }

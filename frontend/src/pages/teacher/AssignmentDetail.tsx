@@ -128,41 +128,41 @@ export default function AssignmentDetail() {
     }
   }
 
-  if (loading) return <div className="min-h-screen bg-slate-950 flex items-center justify-center text-slate-400">Loading...</div>;
-  if (!assignment) return <div className="min-h-screen bg-slate-950 flex items-center justify-center text-red-400">Assignment not found.</div>;
+  if (loading) return <div className="min-h-screen  flex items-center justify-center ">Loading...</div>;
+  if (!assignment) return <div className="min-h-screen  flex items-center justify-center text-red-400">Assignment not found.</div>;
 
   const statusColor: Record<string, string> = {
-    draft: 'bg-slate-700 text-slate-300', published: 'bg-green-500/20 text-green-400', closed: 'bg-red-500/20 text-red-400',
+    draft: 'bg-slate-700 ', published: 'badge-green', closed: 'badge-red',
   };
   const qMap = Object.fromEntries(questions.map(q => [q.id, q]));
 
   return (
-    <div className="min-h-screen bg-slate-950 p-6">
+    <div className="min-h-screen  p-6">
       <div className="max-w-4xl mx-auto space-y-6">
         <div className="flex items-center gap-3">
-          <Link to={`/teacher/classes/${assignment.class_id}`} className="text-slate-400 hover:text-white transition"><ArrowLeft className="w-5 h-5" /></Link>
+          <Link to={`/teacher/classes/${assignment.class_id}`} className=" hover: transition"><ArrowLeft className="w-5 h-5" /></Link>
           <div className="flex-1">
             <Breadcrumb items={[
               { label: 'Dashboard', to: '/teacher' },
               { label: 'Assignments', to: '/teacher/assignments' },
               { label: assignment.title },
             ]} />
-            <h1 className="text-white text-xl font-bold">{assignment.title}</h1>
+            <h1 className=" text-xl font-bold">{assignment.title}</h1>
             <div className="flex items-center gap-3 mt-1">
               <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${statusColor[assignment.status]}`}>{assignment.status}</span>
-              <span className="text-slate-400 text-xs">{assignment.type.toUpperCase()} · {assignment.total_points} pts</span>
-              {assignment.deadline && <span className="text-slate-400 text-xs flex items-center gap-1"><Clock className="w-3 h-3" /> Due {new Date(assignment.deadline).toLocaleDateString()}</span>}
+              <span className=" text-xs">{assignment.type.toUpperCase()} · {assignment.total_points} pts</span>
+              {assignment.deadline && <span className=" text-xs flex items-center gap-1"><Clock className="w-3 h-3" /> Due {new Date(assignment.deadline).toLocaleDateString()}</span>}
             </div>
           </div>
           {assignment.status === 'draft' && (
             <button onClick={publish} disabled={publishing}
-              className="px-4 py-2 bg-green-600 hover:bg-green-500 disabled:opacity-50 text-white text-sm font-medium rounded-xl transition">
+              className="px-4 py-2 bg-green-600 hover:bg-green-500 disabled:opacity-50  text-sm font-medium rounded-xl transition">
               {publishing ? 'Publishing...' : 'Publish'}
             </button>
           )}
           {(assignment.status === 'published' || assignment.status === 'closed') && (
             <button onClick={toggleStatus} disabled={closingStatus}
-              className={`px-4 py-2 text-white text-sm font-medium rounded-xl transition disabled:opacity-50 ${assignment.status === 'published' ? 'bg-amber-600 hover:bg-amber-500' : 'bg-green-600 hover:bg-green-500'}`}>
+              className={`px-4 py-2  text-sm font-medium rounded-xl transition disabled:opacity-50 ${assignment.status === 'published' ? 'bg-amber-600 hover:bg-amber-500' : 'bg-green-600 hover:bg-green-500'}`}>
               {closingStatus ? 'Updating...' : assignment.status === 'published' ? 'Close' : 'Reopen'}
             </button>
           )}
@@ -174,21 +174,21 @@ export default function AssignmentDetail() {
         </div>
 
         {/* Questions preview */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
-          <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between">
-            <h2 className="text-white font-semibold">Questions ({questions.length})</h2>
+        <div className="card-glass rounded-2xl overflow-hidden">
+          <div className="px-6 py-4  flex items-center justify-between">
+            <h2 className=" font-semibold">Questions ({questions.length})</h2>
           </div>
-          <div className="divide-y divide-slate-800">
+          <div className="divide-y">
             {questions.map((q, i) => (
               <div key={q.id} className="px-6 py-4">
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <div className="text-slate-400 text-xs mb-1">Q{i + 1} · {q.type.toUpperCase()} · {q.points} pts</div>
-                    <div className="text-white text-sm">{q.question_text}</div>
+                    <div className=" text-xs mb-1">Q{i + 1} · {q.type.toUpperCase()} · {q.points} pts</div>
+                    <div className=" text-sm">{q.question_text}</div>
                     {q.type === 'mcq' && q.options && (
                       <div className="mt-2 space-y-1">
                         {q.options.map((o: any) => (
-                          <div key={o.label} className={`text-xs px-2 py-1 rounded ${o.label === q.correct_answer ? 'bg-green-500/10 text-green-400' : 'text-slate-400'}`}>
+                          <div key={o.label} className={`text-xs px-2 py-1 rounded ${o.label === q.correct_answer ? 'bg-green-500/10 text-green-400' : ''}`}>
                             {o.label}. {o.text} {o.label === q.correct_answer ? '✓' : ''}
                           </div>
                         ))}
@@ -202,10 +202,10 @@ export default function AssignmentDetail() {
         </div>
 
         {/* Submissions */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
-          <div className="px-6 py-4 border-b border-slate-800 flex items-center gap-3">
-            <h2 className="text-white font-semibold">Submissions</h2>
-            <span className="text-slate-400 text-sm flex items-center gap-1"><Users className="w-4 h-4" />{submissions.length}</span>
+        <div className="card-glass rounded-2xl overflow-hidden">
+          <div className="px-6 py-4  flex items-center gap-3">
+            <h2 className=" font-semibold">Submissions</h2>
+            <span className=" text-sm flex items-center gap-1"><Users className="w-4 h-4" />{submissions.length}</span>
             {submissions.some(s => s.answers.some(a => a.score === null)) && (
               <button
                 onClick={async () => {
@@ -222,16 +222,16 @@ export default function AssignmentDetail() {
             )}
           </div>
           {submissions.length === 0 ? (
-            <div className="py-10 text-center text-slate-400 text-sm">No submissions yet.</div>
+            <div className="py-10 text-center  text-sm">No submissions yet.</div>
           ) : (
-            <div className="divide-y divide-slate-800">
+            <div className="divide-y">
               {submissions.map(sub => (
                 <div key={sub.id}>
                   <button onClick={() => setExpanded(expanded === sub.id ? null : sub.id)}
-                    className="w-full flex items-center justify-between px-6 py-4 hover:bg-slate-800/50 transition text-left">
+                    className="w-full flex items-center justify-between px-6 py-4 hover:/50 transition text-left">
                     <div>
-                      <div className="text-white text-sm font-medium">{sub.student?.name}</div>
-                      <div className="text-slate-400 text-xs">{sub.student?.email} · {new Date(sub.submitted_at).toLocaleString()}</div>
+                      <div className=" text-sm font-medium">{sub.student?.name}</div>
+                      <div className=" text-xs">{sub.student?.email} · {new Date(sub.submitted_at).toLocaleString()}</div>
                     </div>
                     <div className="flex items-center gap-3">
                       {(assignment.type === 'written' || assignment.type === 'mixed') && sub.answers.some(a => a.score === null) && (
@@ -246,9 +246,9 @@ export default function AssignmentDetail() {
                       )}
                       <div className="flex items-center gap-1.5">
                         <CheckCircle className="w-4 h-4 text-green-400" />
-                        <span className="text-white text-sm font-medium">{sub.total_score ?? '—'} / {assignment.total_points}</span>
+                        <span className=" text-sm font-medium">{sub.total_score ?? '—'} / {assignment.total_points}</span>
                       </div>
-                      {expanded === sub.id ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
+                      {expanded === sub.id ? <ChevronUp className="w-4 h-4 " /> : <ChevronDown className="w-4 h-4 " />}
                     </div>
                   </button>
 
@@ -258,21 +258,21 @@ export default function AssignmentDetail() {
                         const q = qMap[ans.question_id];
                         if (!q) return null;
                         return (
-                          <div key={ans.id} className="bg-slate-800 rounded-xl p-4">
-                            <div className="text-slate-400 text-xs mb-1">Q: {q.question_text}</div>
-                            <div className="text-white text-sm mb-2">
+                          <div key={ans.id} className=" rounded-xl p-4">
+                            <div className=" text-xs mb-1">Q: {q.question_text}</div>
+                            <div className=" text-sm mb-2">
                               A: <span className={q.type === 'mcq' && ans.student_answer === q.correct_answer ? 'text-green-400' : q.type === 'mcq' ? 'text-red-400' : ''}>
-                                {ans.student_answer || <span className="italic text-slate-500">No answer</span>}
+                                {ans.student_answer || <span className="italic ">No answer</span>}
                               </span>
                             </div>
                             {q.type === 'written' && (
                               <div className="space-y-2">
                                 <div className="flex items-center gap-2">
-                                  <label className="text-slate-400 text-xs">Score:</label>
+                                  <label className=" text-xs">Score:</label>
                                   <input type="number" defaultValue={ans.score ?? ''} min={0} max={q.points}
                                     onBlur={e => updateScore(sub.id, ans.id, +e.target.value)}
-                                    className="w-16 px-2 py-1 bg-slate-700 border border-slate-600 rounded text-white text-sm text-center focus:outline-none" />
-                                  <span className="text-slate-400 text-xs">/ {q.points}</span>
+                                    className="w-16 px-2 py-1 bg-slate-700 border border-slate-600 rounded  text-sm text-center focus:outline-none" />
+                                  <span className=" text-xs">/ {q.points}</span>
                                 </div>
                                 {ans.ai_feedback && (
                                   <div className="flex items-start gap-2 bg-indigo-500/10 border border-indigo-500/20 rounded-lg px-3 py-2">

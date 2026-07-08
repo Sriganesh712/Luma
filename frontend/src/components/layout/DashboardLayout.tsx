@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, LogOut, Menu, X, ChevronRight } from 'lucide-react';
+import { BookOpen, LogOut, Menu, X, ChevronRight, Settings } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
+import ThemeToggle from '../ThemeToggle';
 
 interface NavItem {
   icon: React.ElementType;
@@ -46,13 +47,19 @@ export default function DashboardLayout({
     : '?';
 
   const roleColors: Record<string, string> = {
-    student: 'bg-blue-50 text-blue-700',
-    teacher: 'bg-emerald-50 text-emerald-700',
-    admin:   'bg-violet-50 text-violet-700',
+    student: 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300',
+    teacher: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300',
+    admin:   'bg-violet-100 text-violet-700 dark:bg-violet-900/40 dark:text-violet-300',
   };
 
+  // Add settings nav item if not present
+  const settingsPath = `/${role}/settings`;
+  const allNavItems = navItems.some(n => n.to.includes('settings'))
+    ? navItems
+    : [...navItems, { icon: Settings, label: 'Settings', to: settingsPath }];
+
   return (
-    <div className="min-h-screen flex bg-zinc-50">
+    <div className="min-h-screen flex" style={{ background: 'var(--bg-page)' }}>
       {/* Mobile overlay */}
       <AnimatePresence>
         {sidebarOpen && (
@@ -70,28 +77,28 @@ export default function DashboardLayout({
       {/* ── Sidebar ── */}
       <aside
         className={`fixed inset-y-0 left-0 z-40 w-64 flex flex-col
-          bg-white border-r border-zinc-200 shadow-md
           transform transition-transform duration-300 lg:translate-x-0
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        style={{ background: 'var(--bg-card)', borderRight: '1px solid var(--border)' }}
       >
         {/* Logo */}
-        <div className="flex items-center gap-3 px-5 py-5 border-b border-zinc-200">
+        <div className="flex items-center gap-3 px-5 py-5" style={{ borderBottom: '1px solid var(--border)' }}>
           <div
             className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 bg-gradient-to-br from-violet-600 to-indigo-600"
           >
             <BookOpen className="w-5 h-5 text-white" />
           </div>
           <div className="flex-1 min-w-0">
-            <div className="font-bold text-sm tracking-tight text-zinc-950">AI-Mentor</div>
+            <div className="font-bold text-sm tracking-tight" style={{ color: 'var(--ink)' }}>Luma</div>
             <div className="text-xs font-medium capitalize mt-0.5">
-              <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${roleColors[role] ?? 'bg-zinc-100 text-zinc-600'}`}>
+              <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${roleColors[role] ?? 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400'}`}>
                 {role}
               </span>
             </div>
           </div>
           <button
             onClick={() => setSidebarOpen(false)}
-            className="lg:hidden p-1.5 rounded-lg hover:bg-zinc-100 transition text-zinc-600"
+            className="lg:hidden p-1.5 rounded-lg transition" style={{ color: 'var(--ink-3)' }}
           >
             <X className="w-4 h-4" />
           </button>
@@ -99,7 +106,7 @@ export default function DashboardLayout({
 
         {/* Nav items */}
         <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
-          {navItems.map(({ icon: Icon, label, to }) => {
+          {allNavItems.map(({ icon: Icon, label, to }) => {
             const isActive = location.pathname === to || (to !== '/' + role && location.pathname.startsWith(to));
             return (
               <Link
@@ -117,9 +124,10 @@ export default function DashboardLayout({
         </nav>
 
         {/* User section */}
-        <div className="px-3 py-4 space-y-1 border-t border-zinc-200">
+        <div className="px-3 py-4 space-y-1" style={{ borderTop: '1px solid var(--border)' }}>
           <div
-            className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-zinc-100"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-xl"
+            style={{ background: 'var(--bg-subtle)' }}
           >
             <div
               className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0 bg-gradient-to-br from-violet-600 to-indigo-600"
@@ -127,13 +135,14 @@ export default function DashboardLayout({
               {initials}
             </div>
             <div className="flex-1 min-w-0">
-              <div className="text-sm font-semibold truncate text-zinc-950">{profile?.name}</div>
-              <div className="text-xs truncate text-zinc-500">{profile?.email}</div>
+              <div className="text-sm font-semibold truncate" style={{ color: 'var(--ink)' }}>{profile?.name}</div>
+              <div className="text-xs truncate" style={{ color: 'var(--ink-4)' }}>{profile?.email}</div>
             </div>
           </div>
           <button
             onClick={handleSignOut}
-            className="flex items-center gap-3 w-full px-3 py-2 rounded-lg transition text-sm font-medium text-zinc-600 hover:bg-red-50 hover:text-red-600"
+            className="flex items-center gap-3 w-full px-3 py-2 rounded-lg transition text-sm font-medium hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 dark:hover:text-red-400"
+            style={{ color: 'var(--ink-3)' }}
           >
             <LogOut className="w-4 h-4" />
             Sign Out
@@ -149,19 +158,20 @@ export default function DashboardLayout({
         >
           <button
             onClick={() => setSidebarOpen(true)}
-            className="lg:hidden p-2 rounded-lg hover:bg-zinc-100 transition text-zinc-600"
+            className="lg:hidden p-2 rounded-lg transition" style={{ color: 'var(--ink-3)' }}
           >
             <Menu className="w-5 h-5" />
           </button>
           <div>
-            <h1 className="font-bold text-base leading-tight text-zinc-950">
+            <h1 className="font-bold text-base leading-tight" style={{ color: 'var(--ink)' }}>
               {pageTitle}
             </h1>
             {pageSubtitle && (
-              <p className="text-xs mt-0.5 text-zinc-500">{pageSubtitle}</p>
+              <p className="text-xs mt-0.5" style={{ color: 'var(--ink-4)' }}>{pageSubtitle}</p>
             )}
           </div>
           <div className="ml-auto flex items-center gap-2">
+            <ThemeToggle compact />
             {headerActions}
           </div>
         </header>
@@ -174,4 +184,3 @@ export default function DashboardLayout({
     </div>
   );
 }
-

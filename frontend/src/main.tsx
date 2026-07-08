@@ -35,12 +35,13 @@ const AssignmentTake    = lazy(() => import('./pages/student/AssignmentTake'));
 
 // @ts-ignore – App is a JS component without type declarations
 const ChatPage          = lazy(() => import('./App'));
+const SettingsPage      = lazy(() => import('./pages/settings/Settings'));
 
 import './index.css';
 
 const PageLoader = () => (
-  <div className="min-h-screen bg-white flex items-center justify-center">
-    <div className="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
+  <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg-page)' }}>
+    <div className="w-8 h-8 border-2 border-violet-500 border-t-transparent rounded-full animate-spin" />
   </div>
 );
 
@@ -82,7 +83,7 @@ function AppRoutes() {
             <Route path="/admin/classes/:id"           element={<AdminClassDetail />} />
             <Route path="/admin/teachers"              element={<AdminUsers />} />
             <Route path="/admin/students"              element={<AdminUsers />} />
-            <Route path="/admin/settings"              element={<AdminDashboard />} />
+            <Route path="/admin/settings"              element={<SettingsPage />} />
           </Route>
 
           {/* Teacher routes */}
@@ -95,6 +96,7 @@ function AppRoutes() {
             <Route path="/teacher/assignments"                element={<TeacherAssignments />} />
             <Route path="/teacher/assignments/new"            element={<AssignmentForm />} />
             <Route path="/teacher/assignments/:id"            element={<AssignmentDetail />} />
+            <Route path="/teacher/settings"                   element={<SettingsPage />} />
           </Route>
 
           {/* Student routes */}
@@ -106,10 +108,10 @@ function AppRoutes() {
             <Route path="/student/assignments"        element={<StudentDashboard />} />
             <Route path="/student/assignments/:id"    element={<AssignmentTake />} />
             <Route path="/student/chat"               element={<ChatPage />} />
+            <Route path="/student/settings"           element={<SettingsPage />} />
           </Route>
 
           {/* Default: redirect to dashboard */}
-          <Route path="/"  element={<Navigate to="/dashboard" replace />} />
           <Route path="*"  element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </motion.div>
@@ -125,7 +127,7 @@ createRoot(document.getElementById('root')!).render(
           <Toaster
             position="top-right"
             toastOptions={{
-              style: { background: '#1e293b', color: '#f1f5f9', border: '1px solid #334155' },
+              style: { background: 'var(--bg-card)', color: 'var(--ink)', border: '1px solid var(--border)' },
             }}
           />
           <Suspense fallback={<PageLoader />}>

@@ -20,7 +20,6 @@ create table public.users (
   email          text not null,
   role           text not null check (role in ('admin', 'teacher', 'student')),
   avatar_url     text,
-  theme          text default 'system',
   created_at     timestamptz default now()
 );
 
