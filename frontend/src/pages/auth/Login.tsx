@@ -19,7 +19,7 @@ const features = [
 ];
 
 export default function Login() {
-  const { signIn } = useAuth();
+  const { signIn, signInWithGoogle } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail]       = useState('');
   const [password, setPassword] = useState('');
@@ -35,7 +35,7 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex">
+    <div className="h-screen w-full flex overflow-hidden">
       {/* Left hero panel */}
       <div className="hidden lg:flex lg:w-[55%] relative overflow-hidden">
         <img src={BG} alt="Students learning together" className="absolute inset-0 w-full h-full object-cover" />
@@ -93,16 +93,16 @@ export default function Login() {
       </div>
 
       {/* Right form panel */}
-      <div className="flex-1 flex items-center justify-center px-8 py-12" style={{ background: 'var(--bg-card)' }}>
-        <div className="w-full max-w-[380px]">
-          <div className="flex items-center gap-3 mb-8 lg:hidden">
+      <div className="flex-1 flex items-center justify-center px-8 py-6 overflow-y-auto" style={{ background: 'var(--bg-card)' }}>
+        <div className="w-full max-w-[380px] my-auto">
+          <div className="flex items-center gap-3 mb-6 lg:hidden">
             <div className="w-10 h-10 rounded-2xl flex items-center justify-center bg-gradient-to-r from-violet-500 to-violet-600">
               <BookOpen className="w-5 h-5 text-white" />
             </div>
             <span className="font-bold text-xl" style={{ color: 'var(--ink)' }}>Luma</span>
           </div>
 
-          <div className="mb-8">
+          <div className="mb-6">
             <h1 className="font-bold text-3xl mb-2" style={{ color: 'var(--ink)', letterSpacing: '-0.03em' }}>
               Welcome back
             </h1>
@@ -111,7 +111,7 @@ export default function Login() {
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-1.5">
               <label className="block text-sm font-semibold" style={{ color: 'var(--ink-2)' }}>Email address</label>
               <input type="email" required value={email} onChange={e => setEmail(e.target.value)}
@@ -119,7 +119,12 @@ export default function Login() {
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-sm font-semibold" style={{ color: 'var(--ink-2)' }}>Password</label>
+              <div className="flex items-center justify-between">
+                <label className="block text-sm font-semibold" style={{ color: 'var(--ink-2)' }}>Password</label>
+                <Link to="/forgot-password" className="text-xs font-medium hover:underline" style={{ color: 'var(--blue)' }}>
+                  Forgot password?
+                </Link>
+              </div>
               <input type="password" required value={password} onChange={e => setPassword(e.target.value)}
                 placeholder="••••••••" className="form-input" />
             </div>
@@ -131,7 +136,21 @@ export default function Login() {
             </button>
           </form>
 
-          <div className="relative my-6">
+          <div className="relative my-4">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full h-px" style={{ background: 'var(--border)' }} />
+            </div>
+            <div className="relative flex justify-center">
+              <span className="px-4 text-xs font-medium" style={{ background: 'var(--bg-card)', color: 'var(--ink-4)' }}>OR</span>
+            </div>
+          </div>
+
+          <button onClick={signInWithGoogle} className="btn-secondary w-full py-3 justify-center text-sm font-bold mb-4">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-4 h-4 mr-2" />
+            Sign in with Google
+          </button>
+
+          <div className="relative my-4">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full h-px" style={{ background: 'var(--border)' }} />
             </div>

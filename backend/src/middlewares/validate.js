@@ -76,3 +76,15 @@ export const registerSchema = z.object({
   (d) => d.role === "admin" ? !!d.institutionName : !!d.institutionCode,
   { message: "Admin requires institutionName; teacher/student require institutionCode" }
 );
+
+export const completeProfileSchema = z.object({
+  id: z.string().uuid(),
+  email: z.string().email(),
+  name: z.string().min(1).max(100),
+  role: z.enum(["admin", "teacher", "student"]),
+  institutionName: z.string().min(1).max(200).optional(),
+  institutionCode: z.string().length(6).optional(),
+}).refine(
+  (d) => d.role === "admin" ? !!d.institutionName : !!d.institutionCode,
+  { message: "Admin requires institutionName; teacher/student require institutionCode" }
+);

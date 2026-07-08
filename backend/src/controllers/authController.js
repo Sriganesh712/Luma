@@ -65,3 +65,29 @@ export async function register(req, res) {
     res.status(400).json({ error: err.message });
   }
 }
+
+export async function completeProfile(req, res) {
+  const { id, email, name, role, institutionCode, institutionName } = req.body;
+  try {
+    let institutionId;
+    if (role === "admin") {
+      const code = generateCode();
+      const { data, error } = await supabaseAdmin.from("institutions").insert({ name: institutionName, code }).select("id").single();
+      if (error) throw new Error(error.message);
+      institutionId = data.id;
+    } else {
+      const { data, error } = await supabaseAdmin.from("institutions").select("id").eq("code", institutionCode.toUpperCase()).single();
+      if (error || !data) return res.status(400).json({ error: "Invalid institution code." });
+      institutionId = data.id;
+    }
+
+    const { error: profileError } = await supabaseAdmin.from("users").insert({
+      id, institution_id: institutionId, name, email, role,
+    });
+    if (profileError) throw new Error(profileError.message);
+
+    res.status(201).json({ message: "Profile completed successfully." });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+}

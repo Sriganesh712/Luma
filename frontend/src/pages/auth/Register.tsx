@@ -19,7 +19,7 @@ const features = [
 ];
 
 export default function Register() {
-  const { signUp, signIn } = useAuth();
+  const { signUp, signIn, signInWithGoogle } = useAuth();
   const navigate = useNavigate();
   const [step, setStep] = useState<1 | 2>(1);
   const [loading, setLoading] = useState(false);
@@ -55,7 +55,7 @@ export default function Register() {
   }
 
   return (
-    <div className="min-h-screen flex">
+    <div className="h-screen w-full flex overflow-hidden">
       {/* Left hero panel */}
       <div className="hidden lg:flex lg:w-[45%] relative overflow-hidden">
         <img src={BG} alt="Education" className="absolute inset-0 w-full h-full object-cover" />
@@ -92,9 +92,9 @@ export default function Register() {
       </div>
 
       {/* Right form panel */}
-      <div className="flex-1 flex items-center justify-center px-8 py-12 overflow-y-auto" style={{ background: 'var(--bg-card)' }}>
-        <div className="w-full max-w-[400px]">
-          <div className="flex items-center gap-3 mb-6 lg:hidden">
+      <div className="flex-1 flex items-center justify-center px-8 py-6 overflow-y-auto" style={{ background: 'var(--bg-card)' }}>
+        <div className="w-full max-w-[400px] my-auto">
+          <div className="flex items-center gap-3 mb-5 lg:hidden">
             <div className="w-10 h-10 rounded-2xl flex items-center justify-center bg-gradient-to-r from-violet-500 to-violet-600">
               <BookOpen className="w-5 h-5 text-white" />
             </div>
@@ -104,10 +104,10 @@ export default function Register() {
           <h1 className="font-bold text-3xl mb-1" style={{ color: 'var(--ink)', letterSpacing: '-0.03em' }}>
             Create account
           </h1>
-          <p className="text-sm mb-5" style={{ color: 'var(--ink-3)' }}>Step {step} of 2</p>
+          <p className="text-sm mb-4" style={{ color: 'var(--ink-3)' }}>Step {step} of 2</p>
 
           {/* Step progress */}
-          <div className="flex items-center gap-2 mb-6">
+          <div className="flex items-center gap-2 mb-5">
             {[1, 2].map(n => (
               <div key={n} className="h-1.5 rounded-full flex-1 transition-all"
                 style={{ background: step >= n ? 'var(--blue)' : 'var(--border)' }} />
@@ -116,7 +116,7 @@ export default function Register() {
 
           {step === 1 ? (
             <form onSubmit={handleNextStep} className="space-y-4">
-              <h2 className="text-sm font-bold mb-4 uppercase tracking-widest" style={{ color: 'var(--ink-4)' }}>
+              <h2 className="text-sm font-bold mb-3 uppercase tracking-widest" style={{ color: 'var(--ink-4)' }}>
                 Personal Information
               </h2>
               <div className="space-y-1.5">
@@ -142,10 +142,24 @@ export default function Register() {
               <button type="submit" className="btn-gradient w-full py-3 justify-center text-sm font-bold mt-2">
                 Continue <ArrowRight className="w-4 h-4" />
               </button>
+              
+              <div className="relative my-4">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full h-px" style={{ background: 'var(--border)' }} />
+                </div>
+                <div className="relative flex justify-center">
+                  <span className="px-4 text-xs font-medium" style={{ background: 'var(--bg-card)', color: 'var(--ink-4)' }}>OR</span>
+                </div>
+              </div>
+
+              <button type="button" onClick={signInWithGoogle} className="btn-secondary w-full py-3 justify-center text-sm font-bold">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-4 h-4 mr-2" />
+                Sign up with Google
+              </button>
             </form>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <h2 className="text-sm font-bold mb-4 uppercase tracking-widest" style={{ color: 'var(--ink-4)' }}>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <h2 className="text-sm font-bold mb-3 uppercase tracking-widest" style={{ color: 'var(--ink-4)' }}>
                 Role & Institution
               </h2>
               <div>

@@ -19,7 +19,10 @@ interface AuthContextType {
   profile: UserProfile | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<{ error: string | null }>;
+  signInWithGoogle: () => Promise<void>;
   signUp: (data: SignUpData) => Promise<{ error: string | null }>;
+  resetPassword: (email: string) => Promise<{ error: string | null }>;
+  completeProfile: (data: SignUpData & { id: string }) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
 }
 
@@ -101,13 +104,47 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
+  async function signInWithGoogle() {
+    await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: window.location.origin }
+    });
+  }
+
+  async function resetPassword(email: string) {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    return { error: error ? error.message : null };
+  }
+
+  async function completeProfile(data: SignUpData & { id: string }) {
+    const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000';
+    try {
+      const res = await fetch(`${API_URL}/api/auth/complete-profile`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...data,
+          institutionCode: data.institutionCode?.toUpperCase(),
+        }),
+      });
+      const body = await res.json();
+      if (!res.ok) return { error: body.error ?? 'Profile completion failed.' };
+      await fetchProfile(data.id);
+      return { error: null };
+    } catch {
+      return { error: 'Could not reach server. Please try again.' };
+    }
+  }
+
   async function signOut() {
     await supabase.auth.signOut();
     setProfile(null);
   }
 
   return (
-    <AuthContext.Provider value={{ session, user, profile, loading, signIn, signUp, signOut }}>
+    <AuthContext.Provider value={{ session, user, profile, loading, signIn, signInWithGoogle, signUp, resetPassword, completeProfile, signOut }}>
       {children}
     </AuthContext.Provider>
   );

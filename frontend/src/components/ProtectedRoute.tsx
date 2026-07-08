@@ -18,6 +18,8 @@ export default function ProtectedRoute({ allowedRoles }: ProtectedRouteProps) {
   }
 
   if (!user) return <Navigate to="/login" replace />;
+  if (user && !profile) return <Navigate to="/complete-profile" replace />;
+
   if (allowedRoles && profile && !allowedRoles.includes(profile.role)) {
     return <Navigate to="/dashboard" replace />;
   }

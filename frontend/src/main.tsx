@@ -10,6 +10,9 @@ import ProtectedRoute from './components/ProtectedRoute';
 // Eagerly loaded (always needed on first paint)
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
+import ForgotPassword from './pages/auth/ForgotPassword';
+import ResetPassword from './pages/auth/ResetPassword';
+import CompleteProfile from './pages/auth/CompleteProfile';
 import Landing from './pages/Landing';
 import DashboardRedirect from './pages/DashboardRedirect';
 
@@ -69,6 +72,9 @@ function AppRoutes() {
           <Route path="/" element={<Landing />} />
           <Route path="/login"    element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/complete-profile" element={<CompleteProfile />} />
 
           {/* Smart dashboard redirect after login */}
           <Route element={<ProtectedRoute />}>
