@@ -40,7 +40,7 @@ app.use(
   })
 );
 
-app.options("*", cors());
+app.options("/*splat", cors());
 app.use(express.json({ limit: "2mb" }));
 app.use(limiter);
 
